@@ -1,6 +1,6 @@
 # ComponentDomParser [![Dependency Status](https://david-dm.org/Inkdpixels/ComponentDomParser.svg)](https://david-dm.org/Inkdpixels/ComponentDomParser) [![devDependency Status](https://david-dm.org/Inkdpixels/ComponentDomParser/dev-status.svg)](https://david-dm.org/Inkdpixels/ComponentDomParser#info=devDependencies) [![Build Status](https://travis-ci.org/Inkdpixels/ComponentDomParser.png?branch=master)](https://travis-ci.org/Inkdpixels/ComponentDomParser) [![Code Climate](https://codeclimate.com/github/Inkdpixels/ComponentDomParser/badges/gpa.svg)](https://codeclimate.com/github/Inkdpixels/ComponentDomParser) [![Test Coverage](https://codeclimate.com/github/Inkdpixels/ComponentDomParser/badges/coverage.svg)](https://codeclimate.com/github/Inkdpixels/ComponentDomParser)
 
-> Parses a DOM Node for tags and executes the matching Constructor on each element.
+> Parses a DOM Node for tags and executes the matching Constructor on each element. This module embraces the practice of a 'Single Point of Entry'-Application(SPE).
 
 ## Install
 With npm, use the familiar syntax e.g.:
@@ -22,44 +22,54 @@ var ComponentDomParser = window.ComponentDomParser;
 In the main application file, create a new instance of the Constructor e.g.:
 ```js
 // Initialize a new instance of the ComponentDomParser.
-var loader = new ComponentDomParser({
-  url: "fonts/webfont.json",
-  timeStamp: "?t=01072015",
-  JSONPCallbackName: "callbackName"
+var parser = new window.ComponentDomParser({
+    dataSelector: 'app',
+    componentIndex: {
+        'myApplication': function(el) { el.innerHTML = 'myApplication initialized!' }
+    },
+    componentDidMountCallback: function(instance) {
+        console.log(instance);
+    }
 });
 
-// Load the fonts.
-loader.getWebFontStyles();
+// Parse the document for all [data-app] nodes.
+parser.parse();
 ```
 
 ### Options
-#### options.url
+#### options.dataSelector
 Type: `String`
 
-The URL to the generated JSONP file.
+The data-* selector on which the parser is based on, if your element has the attribute `data-app="myApplication"`, you should define `app` as the dataSelector.
 
-#### options.timeStamp
-Type: `String` || `Number`
+#### options.componentIndex
+Type: `Object`
 
-A timestamp which will be saved on each device visiting the site, if the users cached version doesn't match value, the JSONP will be re-fetched and applied to the page, thus, getting the newest version of the font. It's recommended to renew the timeStamp on each re-compilation of the JSONP file.
+The index of components, if the value of e.g. `data-app` isn't listed as a key in this object, the parser will throw a info into your console.
+F.e. if you are an element with the attribute `data-app="myApplication"` was found while the `dataSelector` is configured as `app`, you should declare the following `componentIndex`:
+```js
+var MyApplication = function(el) {
+	console.log('MyApplication initialized on: ', el);
+};
+var MyOtherApplication = function(el) {
+	console.log('MyOtherApplication initialized on: ', el);
+};
+var appIndex = {
+	myApplication: MyApplication,
+	myOtherApplication: MyOtherApplication
+	// ... other components
+};
+```
 
-If this option wasn't set, a new `Date` object will be used as the timeStamp, thus, the cache will be disabled.
-
-#### options.JSONPCallbackName
-Type: `String`
-
-The JSONP callback name, filed as `callback` in the [WebfontJSON configuration](https://github.com/ahume/webfontjson#how).
-
-#### options.fontLoadedCallback (optional)
+#### options.componentDidMountCallback
 Type: `Function`
 
-An optional callback which get's executed once the styles are attached to the document.
+The Callback which get's executed on each mount of a component. Usefull if you want to execute custom code on each initialization of a component.
 
-#### options.namespace (optional)
-Type: `String`
+### options.contextElement
+Type: `HTMLElement`
 
-The namespace for the font, usefull if multiple instances of the loader are executed on a page.
-
+The optional content on which the parser is based on, if no context is defined, the parser will use `window.document.body` as the context.
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.

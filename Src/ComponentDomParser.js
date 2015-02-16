@@ -27,10 +27,17 @@
      * @param options {Object} The options Object which initializes the parser.
      * @example
      * // Initialize a new instance of the ComponentDomParser.
-     * var parser = new ComponentDomParser({
+     * var parser = new window.ComponentDomParser({
+     *     dataSelector: 'app',
+     *     componentIndex: {
+     *         'myApplication': function(el) { el.innerHTML = 'myApplication initialized!' }
+     *     },
+     *     componentDidMountCallback: function(instance) {
+     *         console.log(instance);
+     *     }
      * });
      *
-     * // Parse the element.
+     * // Parse the document for all [data-app] nodes.
      * parser.parse();
      * @constructor
      */
