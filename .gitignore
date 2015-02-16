@@ -1,0 +1,3 @@
+node_modules
+Tests/Coverages/
+lcov.info

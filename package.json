@@ -1,0 +1,50 @@
+{
+  "name": "ComponentDomParser",
+  "version": "0.0.1",
+  "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
+  "main": "Dist/ComponentDomParser.js",
+  "scripts": {
+    "6to5": "node_modules/.bin/6to5 Src/ComponentDomParser.js --out-file Dist/ComponentDomParser.js --blacklist useStrict",
+    "uglify": "node_modules/.bin/uglifyjs Dist/ComponentDomParser.js -o Dist/ComponentDomParser.min.js --comments -c -m",
+    "build": "npm run 6to5 && npm run uglify",
+    "jshint": "node_modules/.bin/jshint Src/ComponentDomParser.js --config Build/JsHintConfig.json",
+    "karma": "./node_modules/karma/bin/karma start Build/KarmaConfig.js",
+    "test": "npm run build && npm run jshint && npm run karma"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Inkdpixels/ComponentDomParser.git"
+  },
+  "keywords": [
+    "dom",
+    "parser",
+    "domParser",
+    "spe",
+    "modules",
+    "components"
+  ],
+  "author": [
+    {
+      "name": "Tyll Weiß",
+      "email": "inkdpixels@gmail.com",
+      "url": "https://github.com/Inkdpixels/"
+    }
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Inkdpixels/ComponentDomParser/issues"
+  },
+  "homepage": "https://github.com/Inkdpixels/ComponentDomParser",
+  "devDependencies": {
+    "6to5": "^3.3.10",
+    "glob": "^4.3.5",
+    "jasmine-core": "^2.2.0",
+    "jshint": "^2.6.0",
+    "karma": "^0.12.31",
+    "karma-commonjs": "0.0.13",
+    "karma-coverage": "^0.2.7",
+    "karma-jasmine": "^0.3.5",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "uglify-js": "^2.4.16"
+  }
+}
