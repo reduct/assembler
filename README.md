@@ -48,23 +48,35 @@ Type: `Object`
 The index of components, if the value of e.g. `data-app` isn't listed as a key in this object, the parser will throw a info into your console.
 F.e. if you are an element with the attribute `data-app="myApplication"` was found while the `dataSelector` is configured as `app`, you should declare the following `componentIndex`:
 ```js
+// Define some application Constructors.
 var MyApplication = function(el) {
 	console.log('MyApplication initialized on: ', el);
 };
 var MyOtherApplication = function(el) {
 	console.log('MyOtherApplication initialized on: ', el);
 };
+
+// Initialize a new instance of the ComponentDomParser.
 var appIndex = {
 	myApplication: MyApplication,
 	myOtherApplication: MyOtherApplication
-	// ... other components
+	// ... other apps
 };
+
+// Initialize a new instance of the ComponentDomParser.
+var parser = new window.ComponentDomParser({
+	dataSelector: 'app',
+    componentIndex: appIndex
+});
+
+// Parse the document for all [data-app] nodes.
+parser.parse();
 ```
 
 #### options.componentDidMountCallback
 Type: `Function`
 
-The Callback which get's executed on each mount of a component. Usefull if you want to execute custom code on each initialization of a component.
+The Callback which get's executed on each mount of a component. Usefull if you want to execute custom code on each initialization of a component. This function get's called with the created instance as the first argument.
 
 ### options.contextElement
 Type: `HTMLElement`
