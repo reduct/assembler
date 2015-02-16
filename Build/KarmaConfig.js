@@ -6,16 +6,8 @@ module.exports = function (karmaConfig) {
     	frameworks: ['jasmine'],
 		plugins: ['karma-*'],
 		files: [
-			{
-				pattern: 'Tests/Src/WebFont.json',
-				watched: true,
-				included: false,
-				served: true
-			},
-			'node_modules/webfontloadeddetector/Dist/WebFontLoadedDetector.js',
-			'node_modules/polyfill-function-prototype-bind/bind.js',
 			'Tests/**/*.js',
-			'Dist/WebFontJSONLoader.js'
+			'Dist/ComponentDomParser.js'
 		],
 		reporters: ['coverage', 'dots'],
 		colors: true,
@@ -30,7 +22,7 @@ module.exports = function (karmaConfig) {
 
 		// Add commonJS support and create the code coverage.
 		preprocessors: {
-			'Dist/WebFontJSONLoader.js': ['coverage']
+			'Dist/ComponentDomParser.js': ['coverage']
 		},
 
 		// Specify the location of the coverage report.
