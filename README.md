@@ -9,7 +9,8 @@ Using a single point of entry reduces the code, instead of writing the following
 $('.myAwesomeApp').each(function(node, index) {
 	new AwesomeApp(node);
 });
-```js
+```
+
 ... you will just create a parser, which does all the initializing logic for you. It also reduces the number of operations in the DOM, which is a great for performance since DOM operations are generally slow. Last but not least, your apps/components are free of selectors, you don't need to adjust your component if another project forbids the use of classes or a certain data-* attribute as a JS selector.
 
 TL;DR: Use a parser, to reduce duplicate code, enhance performance and reduce the dependence of selectors in your JS.
