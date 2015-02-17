@@ -18,12 +18,12 @@ TL;DR: Use a parser, to reduce duplicate code, enhance performance and reduce th
 ## Install
 With npm, use the familiar syntax e.g.:
 ```shell
-npm install ComponentDomParser --save
+npm install componentdomparser --save
 ```
 
 once the WebfontJSON package is installed, just require it in the main application file.
 ```js
-var ComponentDomParser = require("ComponentDomParser");
+var ComponentDomParser = require("componentdomparser");
 ```
 
 This package also supports AMD/RequireJS, it is defined as `ComponentDomParser`. Aren't using AMD/CommonJS? Just grab a [release](https://github.com/Inkdpixels/ComponentDomParser/releases), include the `Dist/ComponentDomParser.min.js` and access the loader via the following global:

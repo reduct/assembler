@@ -1,5 +1,5 @@
 {
-  "name": "ComponentDomParser",
+  "name": "componentdomparser",
   "version": "0.0.1",
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
   "main": "Dist/ComponentDomParser.js",
