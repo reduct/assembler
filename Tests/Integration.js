@@ -26,6 +26,25 @@ describe('ComponentDomParser: Integration', function() {
         expect(testElement.innerHTML).toBe(resultString);
     });
 
+    it('should call the "componentDidMountCallback" fn after every initialization of an Constructor', function() {
+        var componentIndex = {
+            Example: function(el, dataset) {}
+        }
+        var callbacks = {
+            componentDidMountCallback: function(instance) {}
+        }
+        spyOn(callbacks, 'componentDidMountCallback');
+        var moduleParserInstance = new window.ComponentDomParser({
+            dataSelector: 'app',
+            componentIndex: componentIndex,
+            componentDidMountCallback: callbacks.componentDidMountCallback
+        });
+
+        moduleParserInstance.parse();
+
+        expect(callbacks.componentDidMountCallback).toHaveBeenCalled();
+    });
+
     afterEach(function() {
         document.body.removeChild(testElement);
     });
