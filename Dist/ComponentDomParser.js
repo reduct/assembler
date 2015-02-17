@@ -87,9 +87,7 @@
         return this;
     };
 
-    ComponentDomParser.prototype._mountComponent = function () {
-        var node = arguments[0] === undefined ? doc.createElement("div") : arguments[0];
-        var Component = arguments[1] === undefined ? function () {} : arguments[1];
+    ComponentDomParser.prototype._mountComponent = function (node, Component) {
         var instance = new Component(node);
 
         if (this.componentDidMountCallback) {
