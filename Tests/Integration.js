@@ -4,7 +4,6 @@ describe('ComponentDomParser: Integration', function() {
         var testElement = document.createElement('div');
         var componentIndex = {
             Example: function(el, dataset) {
-                console.log('Yeah');
                 this.el = el;
                 this.el.innerHTML = resultString
             }
