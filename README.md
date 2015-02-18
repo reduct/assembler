@@ -21,7 +21,7 @@ With npm, use the familiar syntax e.g.:
 npm install componentdomparser --save
 ```
 
-once the WebfontJSON package is installed, just require it in the main application file.
+once the ComponentDomParser package is installed, just require it in the main application file.
 ```js
 var ComponentDomParser = require("componentdomparser");
 ```
