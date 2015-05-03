@@ -103,7 +103,8 @@
 
     ComponentDomParser.prototype._applyFallbackRules = function(node, componentKey) {
       if (this.fallbackHandlers) {
-        let fallbackRule, fallbackRuleRegex;
+        let fallbackRule = null;
+        let fallbackRuleRegex = null;
 
         this._fallbackRules || (this._fallbackRules = Object.keys(this.fallbackHandlers));
         this._fallbackRulesRegex || (this._fallbackRulesRegex = this._fallbackRules.map(function(fallbackRule) {
@@ -112,8 +113,8 @@
 
         for (let i = 0; (fallbackRule = this._fallbackRules[i]) && (fallbackRuleRegex = this._fallbackRulesRegex[i]); i++) {
           if (componentKey.match(fallbackRuleRegex)) {
-            let fallbackHandler = this.fallbackHandlers[fallbackRule],
-                result = fallbackHandler(componentKey, node);
+            let fallbackHandler = this.fallbackHandlers[fallbackRule];
+            let result = fallbackHandler(componentKey, node);
 
             if (result) {
               return result;

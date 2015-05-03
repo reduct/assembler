@@ -105,8 +105,8 @@
         var _this = this;
         if (this.fallbackHandlers) {
             var _ret = (function () {
-                var fallbackRule = undefined,
-                    fallbackRuleRegex = undefined;
+                var fallbackRule = null;
+                var fallbackRuleRegex = null;
 
                 _this._fallbackRules || (_this._fallbackRules = Object.keys(_this.fallbackHandlers));
                 _this._fallbackRulesRegex || (_this._fallbackRulesRegex = _this._fallbackRules.map(function (fallbackRule) {
@@ -115,8 +115,8 @@
 
                 for (var i = 0; (fallbackRule = _this._fallbackRules[i]) && (fallbackRuleRegex = _this._fallbackRulesRegex[i]); i++) {
                     if (componentKey.match(fallbackRuleRegex)) {
-                        var fallbackHandler = _this.fallbackHandlers[fallbackRule],
-                            result = fallbackHandler(componentKey, node);
+                        var fallbackHandler = _this.fallbackHandlers[fallbackRule];
+                        var result = fallbackHandler(componentKey, node);
 
                         if (result) {
                             return {
