@@ -45,6 +45,92 @@ describe('ComponentDomParser: Integration', function() {
         expect(callbacks.componentDidMountCallback).toHaveBeenCalled();
     });
 
+    it('should call a matching fallback handler when the desired module is not listed under "componentIndex"', function() {
+        var moduleParserInstance = new window.ComponentDomParser({
+                dataSelector: 'app',
+                componentIndex: {},
+                fallback: {
+                    'Example' : function(componentKey) {
+                        return function(el, dataset) {
+                          el.innerHTML = 'Fallback found "' + componentKey + '" key';
+                        };
+                    }
+                }
+            });
+
+        moduleParserInstance.parse();
+
+        expect(testElement.innerHTML).toBe('Fallback found "Example" key');
+    });
+
+    it('should allow fallback rules to be defined with wild cards', function() {
+        testElement.setAttribute('data-app', 'Some/Example');
+        var moduleParserInstance = new window.ComponentDomParser({
+                dataSelector: 'app',
+                componentIndex: {},
+                fallback: {
+                    'Some/*' : function(componentKey) {
+                        return function(el, dataset) {
+                          el.innerHTML = 'Fallback found "' + componentKey + '" key';
+                        };
+                    }
+                }
+            });
+
+        moduleParserInstance.parse();
+
+        expect(testElement.innerHTML).toBe('Fallback found "Some/Example" key');
+    });
+
+    it('should let fallback handlers decide whether their appliance was successful or not', function() {
+        var fallbackRules = {
+                'Example' : function() {},
+                '*' : function() {}
+            },
+            moduleParserInstance = new window.ComponentDomParser({
+                dataSelector: 'app',
+                componentIndex: {},
+                fallback: fallbackRules
+            });
+
+        spyOn(fallbackRules, 'Example');
+        spyOn(fallbackRules, '*').and.returnValue(function(el, dataset) {
+          el.innerHTML = 'This would match all the time.';
+        });
+
+        moduleParserInstance.parse();
+
+        expect(fallbackRules['Example']).toHaveBeenCalled();
+        expect(fallbackRules['*']).toHaveBeenCalled();
+        expect(testElement.innerHTML).toBe('This would match all the time.');
+    });
+
+    it('should exit fallback chain after the first successful appliance', function() {
+        var fallbackRules = {
+                'Example' : function() {},
+                'Ex*' : function() {},
+                '*' : function() {}
+            },
+            moduleParserInstance = new window.ComponentDomParser({
+                dataSelector: 'app',
+                componentIndex: {},
+                fallback: fallbackRules
+            });
+
+        spyOn(fallbackRules, 'Example');
+        spyOn(fallbackRules, 'Ex*').and.returnValue(function(el, dataset) {
+          el.innerHTML = 'Second Rule applied.';
+        });
+        spyOn(fallbackRules, '*');
+
+        moduleParserInstance.parse();
+
+        expect(fallbackRules['Example']).toHaveBeenCalled();
+        expect(fallbackRules['Ex*']).toHaveBeenCalled();
+        expect(fallbackRules['*']).not.toHaveBeenCalled();
+        expect(testElement.innerHTML).toBe('Second Rule applied.');
+    });
+
     afterEach(function() {
         document.body.removeChild(testElement);
     });
