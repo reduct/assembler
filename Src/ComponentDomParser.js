@@ -51,6 +51,7 @@
         this.fallbackHandlers = options.fallback || null;
         this._fallbackRules = null;
         this._fallbackRulesRegex = null;
+        this._mountedElementsCache = [];
     };
 
     ComponentDomParser.prototype._checkForRequiredConstants = function(options) {
@@ -83,7 +84,9 @@
             let Component = self.componentIndex[componentKey] || self._applyFallbackRules(node, componentKey);
 
             if(Component) {
-                self._mountComponent(node, Component);
+                if(self._mountedElementsCache.indexOf(node) < 0) {
+                    self._mountComponent(node, Component);
+                }
             } else {
                 console.info('ComponentDomParser Info: Component "' + componentKey + '" is not present in the passed componentIndex:', self.componentIndex);
             }
@@ -94,6 +97,8 @@
 
     ComponentDomParser.prototype._mountComponent = function(node, Component) {
         let instance = new Component(node);
+
+        this._mountedElementsCache.push(node);
 
         if(this.componentDidMountCallback) {
             this.componentDidMountCallback(instance);
