@@ -6,7 +6,7 @@
 Using a single point of entry reduces the code, instead of writing the following accross all of your sites/apps components:
 ```js
 // An example using jQuery/Zepto.
-$('.myAwesomeApp').each(function(node, index) {
+$('.myAwesomeApp').each(function(index, node) {
 	new AwesomeApp(node);
 });
 ```
