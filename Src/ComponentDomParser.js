@@ -44,7 +44,6 @@
     let ComponentDomParser = function(options) {
         this._checkForRequiredConstants(options);
 
-        this.contextElement = options.contextElement || doc.body;
         this.dataSelector = options.dataSelector;
         this.componentIndex = options.componentIndex;
         this.componentDidMountCallback = options.componentDidMountCallback;
@@ -72,8 +71,10 @@
         }
     };
 
-    ComponentDomParser.prototype.parse = function() {
-        let elementNodeList = this.contextElement.querySelectorAll('[data-' + this.dataSelector + ']');
+    ComponentDomParser.prototype.parse = function(contextElement) {
+        contextElement = contextElement || doc.body;
+
+        let elementNodeList = contextElement.querySelectorAll('[data-' + this.dataSelector + ']');
         let elementNodes = Array.prototype.slice.call(elementNodeList,0);
         let self = this;
 

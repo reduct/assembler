@@ -140,5 +140,9 @@ MyNamespace/SomethingElse was loaded!
 SomethingCompletelyDifferent not found!
 ```
 
+### Methods
+#### parser.parse(contextElement);
+Will parse the given `contextElement`, which is optional and will fall back to the `document.body`, for matching elements and will initiate a Constructor mount.
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
