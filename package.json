@@ -1,6 +1,6 @@
 {
   "name": "componentdomparser",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
   "main": "Dist/ComponentDomParser.js",
   "scripts": {
