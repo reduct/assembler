@@ -103,28 +103,28 @@
     };
 
     ComponentDomParser.prototype._applyFallbackRules = function(node, componentKey) {
-      if (this.fallbackHandlers) {
-        let fallbackRule = null;
-        let fallbackRuleRegex = null;
+        if (this.fallbackHandlers) {
+            let fallbackRule = null;
+            let fallbackRuleRegex = null;
 
-        this._fallbackRules || (this._fallbackRules = Object.keys(this.fallbackHandlers));
-        this._fallbackRulesRegex || (this._fallbackRulesRegex = this._fallbackRules.map(function(fallbackRule) {
-          return new RegExp('^' + fallbackRule.replace(/[^\w\s]/g, '\$&').replace(/\*/g, '\\w+') + '$');
-        }));
+            this._fallbackRules || (this._fallbackRules = Object.keys(this.fallbackHandlers));
+            this._fallbackRulesRegex || (this._fallbackRulesRegex = this._fallbackRules.map(function(fallbackRule) {
+                return new RegExp('^' + fallbackRule.replace(/[^\w\s]/g, '\$&').replace(/\*/g, '\\w+') + '$');
+            }));
 
-        for (let i = 0; (fallbackRule = this._fallbackRules[i]) && (fallbackRuleRegex = this._fallbackRulesRegex[i]); i++) {
-          if (componentKey.match(fallbackRuleRegex)) {
-            let fallbackHandler = this.fallbackHandlers[fallbackRule];
-            let result = fallbackHandler(componentKey, node);
+            for (let i = 0; (fallbackRule = this._fallbackRules[i]) && (fallbackRuleRegex = this._fallbackRulesRegex[i]); i++) {
+                if (componentKey.match(fallbackRuleRegex)) {
+                    let fallbackHandler = this.fallbackHandlers[fallbackRule];
+                    let result = fallbackHandler(componentKey, node);
 
-            if (result) {
-              return result;
+                    if (result) {
+                        return result;
+                    }
+                }
             }
-          }
         }
-      }
 
-      return false;
+        return false;
     };
 
     return ComponentDomParser;
