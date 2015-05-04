@@ -96,5 +96,49 @@ Type: `HTMLElement`
 
 The optional content on which the parser is based on, if no context is defined, the parser will use `window.document.body` as the context.
 
+### options.fallback
+Type: `Object`
+
+An optional map of matchers and functions that are executed, if the desired component is not listed in the `componentIndex`.
+
+Keys are evaluated as wildcarded component keys, which are matched against the component key of each `HTML Element` in question.
+
+Values are functions, taking `componentKey (String)` and `node (HTMLElement)` as an argument and should return a Component constructor like those listed in the `componentIndex`.
+
+Example:
+
+```js
+var parser = new window.ComponentDomParser({
+    dataSelector: 'app',
+    componentIndex: {},
+    fallback: {
+			'MyNamespace/*' : function(componentKey, el) {
+				return function(el) {
+					el.innerHTML = '"' + componentKey + '" was loaded!';
+				};
+			},
+			'*' : function(componentKey) {
+				return function(el) {
+					el.innerHTML = '"' + componentKey + '" not found!';
+				};
+			}
+		}
+});
+```
+
+```html
+<div data-app="MyNamespace/Something"></div>
+<div data-app="MyNamespace/SomethingElse"></div>
+<div data-app="SomethingCompletelyDifferent"></div>
+```
+
+Considering both of the code snippets above, the execution of  `parser.parse();` would result in the following output:
+
+```
+MyNamespace/Something was loaded!
+MyNamespace/SomethingElse was loaded!
+SomethingCompletelyDifferent not found!
+```
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.

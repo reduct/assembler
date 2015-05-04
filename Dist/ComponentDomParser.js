@@ -48,6 +48,10 @@
         this.dataSelector = options.dataSelector;
         this.componentIndex = options.componentIndex;
         this.componentDidMountCallback = options.componentDidMountCallback;
+
+        this.fallbackHandlers = options.fallback || null;
+        this._fallbackRules = null;
+        this._fallbackRulesRegex = null;
     };
 
     ComponentDomParser.prototype._checkForRequiredConstants = function (options) {
@@ -75,7 +79,7 @@
 
         elementNodes.forEach(function (node) {
             var componentKey = node.dataset[self.dataSelector];
-            var Component = self.componentIndex[componentKey];
+            var Component = self.componentIndex[componentKey] || self._applyFallbackRules(node, componentKey);
 
             if (Component) {
                 self._mountComponent(node, Component);
@@ -97,6 +101,37 @@
         return instance;
     };
 
+    ComponentDomParser.prototype._applyFallbackRules = function (node, componentKey) {
+        var _this = this;
+        if (this.fallbackHandlers) {
+            var _ret = (function () {
+                var fallbackRule = null;
+                var fallbackRuleRegex = null;
+
+                _this._fallbackRules || (_this._fallbackRules = Object.keys(_this.fallbackHandlers));
+                _this._fallbackRulesRegex || (_this._fallbackRulesRegex = _this._fallbackRules.map(function (fallbackRule) {
+                    return new RegExp("^" + fallbackRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
+                }));
+
+                for (var i = 0; (fallbackRule = _this._fallbackRules[i]) && (fallbackRuleRegex = _this._fallbackRulesRegex[i]); i++) {
+                    if (componentKey.match(fallbackRuleRegex)) {
+                        var fallbackHandler = _this.fallbackHandlers[fallbackRule];
+                        var result = fallbackHandler(componentKey, node);
+
+                        if (result) {
+                            return {
+                                v: result
+                            };
+                        }
+                    }
+                }
+            })();
+
+            if (typeof _ret === "object") return _ret.v;
+        }
+
+        return false;
+    };
 
     return ComponentDomParser;
 });
