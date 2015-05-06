@@ -131,5 +131,12 @@
         return false;
     };
 
+
+    ComponentDomParser.prototype.addComponent = function(componentKey, Component) {
+        this.componentIndex[componentKey] = Component;
+
+        return this;
+    };
+
     return ComponentDomParser;
 }));

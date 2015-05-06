@@ -131,6 +131,22 @@ describe('ComponentDomParser: Integration', function() {
         expect(testElement.innerHTML).toBe('Second Rule applied.');
     });
 
+    it('should add the new Component passed to the addComponent() method to the internal componentIndex', function() {
+        var resultString = 'Constructor "Example" was mounted.';
+        var moduleParserInstance = new window.ComponentDomParser({
+            dataSelector: 'app',
+            componentIndex: {}
+        });
+
+        moduleParserInstance.addComponent('Example', function(el) {
+            el.innerHTML = resultString;
+        });
+
+        moduleParserInstance.parse();
+
+        expect(testElement.innerHTML).toBe(resultString);
+    });
+
     afterEach(function() {
         document.body.removeChild(testElement);
     });

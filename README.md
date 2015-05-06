@@ -147,6 +147,10 @@ Enables logging messages to the UAs console object for debugging purposes.
 #### parser.parse(contextElement);
 Will parse the given `contextElement`, which is optional and will fall back to the `document.body`, for matching elements and will initiate a Constructor mount.
 
+#### parser.addComponent(componentKey, Component);
+Adds the given `Component` Constructor to the internal `componentIndex`. Usefull for asynchronous loaded Components.
+Note that you still need to (re-)parse the node/document after adding components.
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 
