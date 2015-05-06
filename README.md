@@ -91,12 +91,12 @@ Type: `Function`
 
 The Callback which get's executed on each mount of a component. Usefull if you want to execute custom code on each initialization of a component. This function get's called with the created instance as the first argument.
 
-### options.fallback
+### options.nonIndexedComponentPolicies
 Type: `Object`
 
 An optional map of matchers and functions that are executed.
 
-Usefull for asynchronous loading of Components - If the desired component is not listed in the `componentIndex` at the moment of the `.parse()`, the matching fallback Constructor will be applied.
+Usefull for asynchronous loading of Components - If the desired `componentKey` is not listed in the `componentIndex` in the moment of the `.parse()`, the matching fallback Constructor will be applied.
 
 Keys are evaluated as wildcarded component keys, which are matched against the component key of each `HTML Element` in question.
 
@@ -108,7 +108,7 @@ Example:
 var parser = new window.ComponentDomParser({
     dataSelector: 'app',
     componentIndex: {},
-    fallback: {
+    nonIndexedComponentPolicies: {
 			'MyNamespace/*' : function(componentKey, el) {
 				return function(el) {
 					el.innerHTML = '"' + componentKey + '" was loaded!';
