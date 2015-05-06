@@ -49,9 +49,9 @@
         this.componentDidMountCallback = options.componentDidMountCallback;
 
         this.nonIndexedComponentPolicies = options.nonIndexedComponentPolicies || null;
-        this._fallbackRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
-        this._fallbackRulesRegex = this._fallbackRules ? this._fallbackRules.map(function (fallbackRule) {
-            return new RegExp("^" + fallbackRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
+        this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
+        this._policyRulesRegex = this._policyRules ? this._policyRules.map(function (policyRule) {
+            return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
         }) : null;
         this._mountedElementsCache = [];
     };
@@ -113,16 +113,16 @@
         var nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
 
         if (nonIndexedComponentPolicies) {
-            var fallbackRule = null;
-            var fallbackRuleRegex = null;
+            var policyRule = null;
+            var policyRuleRegex = null;
 
-            for (var i = 0; (fallbackRule = this._fallbackRules[i]) && (fallbackRuleRegex = this._fallbackRulesRegex[i]); i++) {
-                if (componentKey.match(fallbackRuleRegex)) {
-                    var fallbackHandler = nonIndexedComponentPolicies[fallbackRule];
-                    var result = fallbackHandler(componentKey, node);
+            for (var i = 0; (policyRule = this._policyRules[i]) && (policyRuleRegex = this._policyRulesRegex[i]); i++) {
+                if (componentKey.match(policyRuleRegex)) {
+                    var policyHandler = nonIndexedComponentPolicies[policyRule];
+                    var policyConstructor = policyHandler(componentKey, node);
 
-                    if (result) {
-                        return result;
+                    if (policyConstructor) {
+                        return policyConstructor;
                     }
                 }
             }
