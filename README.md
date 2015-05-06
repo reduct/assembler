@@ -91,7 +91,7 @@ Type: `Function`
 
 The Callback which get's executed on each mount of a component. Usefull if you want to execute custom code on each initialization of a component. This function get's called with the created instance as the first argument.
 
-### options.nonIndexedComponentPolicies
+#### options.nonIndexedComponentPolicies
 Type: `Object`
 
 An optional map of matchers and functions that are executed.
