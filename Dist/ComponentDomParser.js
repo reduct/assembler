@@ -49,8 +49,10 @@
         this.componentDidMountCallback = options.componentDidMountCallback;
 
         this.nonIndexedComponentPolicies = options.nonIndexedComponentPolicies || null;
-        this._fallbackRules = null;
-        this._fallbackRulesRegex = null;
+        this._fallbackRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
+        this._fallbackRulesRegex = this._fallbackRules ? this._fallbackRules.map(function (fallbackRule) {
+            return new RegExp("^" + fallbackRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
+        }) : null;
         this._mountedElementsCache = [];
     };
 
@@ -108,32 +110,22 @@
     };
 
     ComponentDomParser.prototype._applyFallbackRules = function (node, componentKey) {
-        var _this = this;
-        if (this.nonIndexedComponentPolicies) {
-            var _ret = (function () {
-                var fallbackRule = null;
-                var fallbackRuleRegex = null;
+        var nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
 
-                _this._fallbackRules || (_this._fallbackRules = Object.keys(_this.nonIndexedComponentPolicies));
-                _this._fallbackRulesRegex || (_this._fallbackRulesRegex = _this._fallbackRules.map(function (fallbackRule) {
-                    return new RegExp("^" + fallbackRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
-                }));
+        if (nonIndexedComponentPolicies) {
+            var fallbackRule = null;
+            var fallbackRuleRegex = null;
 
-                for (var i = 0; (fallbackRule = _this._fallbackRules[i]) && (fallbackRuleRegex = _this._fallbackRulesRegex[i]); i++) {
-                    if (componentKey.match(fallbackRuleRegex)) {
-                        var fallbackHandler = _this.nonIndexedComponentPolicies[fallbackRule];
-                        var result = fallbackHandler(componentKey, node);
+            for (var i = 0; (fallbackRule = this._fallbackRules[i]) && (fallbackRuleRegex = this._fallbackRulesRegex[i]); i++) {
+                if (componentKey.match(fallbackRuleRegex)) {
+                    var fallbackHandler = nonIndexedComponentPolicies[fallbackRule];
+                    var result = fallbackHandler(componentKey, node);
 
-                        if (result) {
-                            return {
-                                v: result
-                            };
-                        }
+                    if (result) {
+                        return result;
                     }
                 }
-            })();
-
-            if (typeof _ret === "object") return _ret.v;
+            }
         }
 
         return false;
