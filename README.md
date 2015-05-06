@@ -89,14 +89,14 @@ parser.parse();
 #### options.componentDidMountCallback
 Type: `Function`
 
-The Callback which get's executed on each mount of a component. Usefull if you want to execute custom code on each initialization of a component. This function get's called with the created instance as the first argument.
+The Callback which get's executed on each mount of a component. Useful if you want to execute custom code on each initialization of a component. This function get's called with the created instance as the first argument.
 
 #### options.nonIndexedComponentPolicies
 Type: `Object`
 
 An optional map of matchers and functions that are executed.
 
-Usefull for asynchronous loading of Components - If the desired `componentKey` is not listed in the `componentIndex` in the moment of the `.parse()`, the matching fallback Constructor will be applied.
+Useful for asynchronous loading of Components - If the desired `componentKey` is not listed in the `componentIndex` in the moment of the `.parse()`, the matching fallback Constructor will be applied.
 
 Keys are evaluated as wildcarded component keys, which are matched against the component key of each `HTML Element` in question.
 
@@ -148,7 +148,7 @@ Enables logging messages to the UAs console object for debugging purposes.
 Will parse the given `contextElement`, which is optional and will fall back to the `document.body`, for matching elements and will initiate a Constructor mount.
 
 #### parser.addComponent(componentKey, Component);
-Adds the given `Component` Constructor to the internal `componentIndex`. Usefull for asynchronous loaded Components.
+Adds the given `Component` Constructor to the internal `componentIndex`. Useful for asynchronous loaded Components.
 Note that you still need to (re-)parse the node/document after adding components.
 
 ## Contributing
