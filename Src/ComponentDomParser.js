@@ -47,10 +47,12 @@
         this.dataSelector = options.dataSelector;
         this.componentIndex = options.componentIndex;
         this.componentDidMountCallback = options.componentDidMountCallback;
-
-        this.fallbackHandlers = options.fallback || null;
-        this._fallbackRules = null;
-        this._fallbackRulesRegex = null;
+        this.nonIndexedComponentPolicies = options.nonIndexedComponentPolicies || null;
+        this._isLoggingEnabled = false || options.isLoggingEnabled;
+        this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
+        this._policyRulesRegex = this._policyRules ? this._policyRules.map(function(policyRule) {
+            return new RegExp('^' + policyRule.replace(/[^\w\s]/g, '\$&').replace(/\*/g, '\\w+') + '$');
+        }) : null;
         this._mountedElementsCache = [];
     };
 
@@ -81,14 +83,14 @@
 
         elementNodes.forEach(function(node) {
             let componentKey = node.dataset[self.dataSelector];
-            let Component = self.componentIndex[componentKey] || self._applyFallbackRules(node, componentKey);
+            let Component = self.componentIndex[componentKey] || self._getNonIndexComponentPolicy(node, componentKey);
 
             if(Component) {
                 if(self._mountedElementsCache.indexOf(node) < 0) {
                     self._mountComponent(node, Component);
                 }
-            } else {
-                console.info('ComponentDomParser Info: Component "' + componentKey + '" is not present in the passed componentIndex:', self.componentIndex);
+            } else if(this._isLoggingEnabled) {
+                console.info('ComponentDomParser Info: Component "' + componentKey + '" isn`t present in the passed componentIndex while mounting a node.', self.componentIndex, node);
             }
         });
 
@@ -107,29 +109,33 @@
         return instance;
     };
 
-    ComponentDomParser.prototype._applyFallbackRules = function(node, componentKey) {
-        if (this.fallbackHandlers) {
-            let fallbackRule = null;
-            let fallbackRuleRegex = null;
+    ComponentDomParser.prototype._getNonIndexComponentPolicy = function(node, componentKey) {
+        let nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
 
-            this._fallbackRules || (this._fallbackRules = Object.keys(this.fallbackHandlers));
-            this._fallbackRulesRegex || (this._fallbackRulesRegex = this._fallbackRules.map(function(fallbackRule) {
-                return new RegExp('^' + fallbackRule.replace(/[^\w\s]/g, '\$&').replace(/\*/g, '\\w+') + '$');
-            }));
+        if (nonIndexedComponentPolicies) {
+            let policyRule = null;
+            let policyRuleRegex = null;
 
-            for (let i = 0; (fallbackRule = this._fallbackRules[i]) && (fallbackRuleRegex = this._fallbackRulesRegex[i]); i++) {
-                if (componentKey.match(fallbackRuleRegex)) {
-                    let fallbackHandler = this.fallbackHandlers[fallbackRule];
-                    let result = fallbackHandler(componentKey, node);
+            for (let i = 0; (policyRule = this._policyRules[i]) && (policyRuleRegex = this._policyRulesRegex[i]); i++) {
+                if (componentKey.match(policyRuleRegex)) {
+                    let policyHandler = nonIndexedComponentPolicies[policyRule];
+                    let policyConstructor = policyHandler(componentKey, node);
 
-                    if (result) {
-                        return result;
+                    if (policyConstructor) {
+                        return policyConstructor;
                     }
                 }
             }
         }
 
         return false;
+    };
+
+
+    ComponentDomParser.prototype.addComponent = function(componentKey, Component) {
+        this.componentIndex[componentKey] = Component;
+
+        return this;
     };
 
     return ComponentDomParser;

@@ -47,10 +47,12 @@
         this.dataSelector = options.dataSelector;
         this.componentIndex = options.componentIndex;
         this.componentDidMountCallback = options.componentDidMountCallback;
-
-        this.fallbackHandlers = options.fallback || null;
-        this._fallbackRules = null;
-        this._fallbackRulesRegex = null;
+        this.nonIndexedComponentPolicies = options.nonIndexedComponentPolicies || null;
+        this._isLoggingEnabled = false || options.isLoggingEnabled;
+        this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
+        this._policyRulesRegex = this._policyRules ? this._policyRules.map(function (policyRule) {
+            return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
+        }) : null;
         this._mountedElementsCache = [];
     };
 
@@ -81,14 +83,14 @@
 
         elementNodes.forEach(function (node) {
             var componentKey = node.dataset[self.dataSelector];
-            var Component = self.componentIndex[componentKey] || self._applyFallbackRules(node, componentKey);
+            var Component = self.componentIndex[componentKey] || self._getNonIndexComponentPolicy(node, componentKey);
 
             if (Component) {
                 if (self._mountedElementsCache.indexOf(node) < 0) {
                     self._mountComponent(node, Component);
                 }
-            } else {
-                console.info("ComponentDomParser Info: Component \"" + componentKey + "\" is not present in the passed componentIndex:", self.componentIndex);
+            } else if (this._isLoggingEnabled) {
+                console.info("ComponentDomParser Info: Component \"" + componentKey + "\" isn`t present in the passed componentIndex while mounting a node.", self.componentIndex, node);
             }
         });
 
@@ -107,36 +109,33 @@
         return instance;
     };
 
-    ComponentDomParser.prototype._applyFallbackRules = function (node, componentKey) {
-        var _this = this;
-        if (this.fallbackHandlers) {
-            var _ret = (function () {
-                var fallbackRule = null;
-                var fallbackRuleRegex = null;
+    ComponentDomParser.prototype._getNonIndexComponentPolicy = function (node, componentKey) {
+        var nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
 
-                _this._fallbackRules || (_this._fallbackRules = Object.keys(_this.fallbackHandlers));
-                _this._fallbackRulesRegex || (_this._fallbackRulesRegex = _this._fallbackRules.map(function (fallbackRule) {
-                    return new RegExp("^" + fallbackRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
-                }));
+        if (nonIndexedComponentPolicies) {
+            var policyRule = null;
+            var policyRuleRegex = null;
 
-                for (var i = 0; (fallbackRule = _this._fallbackRules[i]) && (fallbackRuleRegex = _this._fallbackRulesRegex[i]); i++) {
-                    if (componentKey.match(fallbackRuleRegex)) {
-                        var fallbackHandler = _this.fallbackHandlers[fallbackRule];
-                        var result = fallbackHandler(componentKey, node);
+            for (var i = 0; (policyRule = this._policyRules[i]) && (policyRuleRegex = this._policyRulesRegex[i]); i++) {
+                if (componentKey.match(policyRuleRegex)) {
+                    var policyHandler = nonIndexedComponentPolicies[policyRule];
+                    var policyConstructor = policyHandler(componentKey, node);
 
-                        if (result) {
-                            return {
-                                v: result
-                            };
-                        }
+                    if (policyConstructor) {
+                        return policyConstructor;
                     }
                 }
-            })();
-
-            if (typeof _ret === "object") return _ret.v;
+            }
         }
 
         return false;
+    };
+
+
+    ComponentDomParser.prototype.addComponent = function (componentKey, Component) {
+        this.componentIndex[componentKey] = Component;
+
+        return this;
     };
 
     return ComponentDomParser;

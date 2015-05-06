@@ -45,11 +45,11 @@ describe('ComponentDomParser: Integration', function() {
         expect(callbacks.componentDidMountCallback).toHaveBeenCalled();
     });
 
-    it('should call a matching fallback handler when the desired module is not listed under "componentIndex"', function() {
+    it('should call a matching nonIndexedComponentPoliciy handler when the desired module is not listed under "componentIndex"', function() {
         var moduleParserInstance = new window.ComponentDomParser({
                 dataSelector: 'app',
                 componentIndex: {},
-                fallback: {
+                nonIndexedComponentPolicies: {
                     'Example' : function(componentKey) {
                         return function(el, dataset) {
                           el.innerHTML = 'Fallback found "' + componentKey + '" key';
@@ -63,12 +63,12 @@ describe('ComponentDomParser: Integration', function() {
         expect(testElement.innerHTML).toBe('Fallback found "Example" key');
     });
 
-    it('should allow fallback rules to be defined with wild cards', function() {
+    it('should allow nonIndexedComponentPoliciies rules to be defined with wild cards', function() {
         testElement.setAttribute('data-app', 'Some/Example');
         var moduleParserInstance = new window.ComponentDomParser({
                 dataSelector: 'app',
                 componentIndex: {},
-                fallback: {
+                nonIndexedComponentPolicies: {
                     'Some/*' : function(componentKey) {
                         return function(el, dataset) {
                           el.innerHTML = 'Fallback found "' + componentKey + '" key';
@@ -83,52 +83,68 @@ describe('ComponentDomParser: Integration', function() {
     });
 
     it('should let fallback handlers decide whether their appliance was successful or not', function() {
-        var fallbackRules = {
-                'Example' : function() {},
-                '*' : function() {}
-            },
-            moduleParserInstance = new window.ComponentDomParser({
-                dataSelector: 'app',
-                componentIndex: {},
-                fallback: fallbackRules
-            });
+        var policies = {
+            'Example' : function() {},
+            '*' : function() {}
+        };
+        var moduleParserInstance = new window.ComponentDomParser({
+            dataSelector: 'app',
+            componentIndex: {},
+            nonIndexedComponentPolicies: policies
+        });
 
-        spyOn(fallbackRules, 'Example');
-        spyOn(fallbackRules, '*').and.returnValue(function(el, dataset) {
+        spyOn(policies, 'Example');
+        spyOn(policies, '*').and.returnValue(function(el, dataset) {
           el.innerHTML = 'This would match all the time.';
         });
 
         moduleParserInstance.parse();
 
-        expect(fallbackRules['Example']).toHaveBeenCalled();
-        expect(fallbackRules['*']).toHaveBeenCalled();
+        expect(policies['Example']).toHaveBeenCalled();
+        expect(policies['*']).toHaveBeenCalled();
         expect(testElement.innerHTML).toBe('This would match all the time.');
     });
 
     it('should exit fallback chain after the first successful appliance', function() {
-        var fallbackRules = {
-                'Example' : function() {},
-                'Ex*' : function() {},
-                '*' : function() {}
-            },
-            moduleParserInstance = new window.ComponentDomParser({
-                dataSelector: 'app',
-                componentIndex: {},
-                fallback: fallbackRules
-            });
+        var policies = {
+            'Example' : function() {},
+            'Ex*' : function() {},
+            '*' : function() {}
+        };
+        var moduleParserInstance = new window.ComponentDomParser({
+            dataSelector: 'app',
+            componentIndex: {},
+            nonIndexedComponentPolicies: policies
+        });
 
-        spyOn(fallbackRules, 'Example');
-        spyOn(fallbackRules, 'Ex*').and.returnValue(function(el, dataset) {
+        spyOn(policies, 'Example');
+        spyOn(policies, 'Ex*').and.returnValue(function(el, dataset) {
           el.innerHTML = 'Second Rule applied.';
         });
-        spyOn(fallbackRules, '*');
+        spyOn(policies, '*');
 
         moduleParserInstance.parse();
 
-        expect(fallbackRules['Example']).toHaveBeenCalled();
-        expect(fallbackRules['Ex*']).toHaveBeenCalled();
-        expect(fallbackRules['*']).not.toHaveBeenCalled();
+        expect(policies['Example']).toHaveBeenCalled();
+        expect(policies['Ex*']).toHaveBeenCalled();
+        expect(policies['*']).not.toHaveBeenCalled();
         expect(testElement.innerHTML).toBe('Second Rule applied.');
+    });
+
+    it('should add the new Component passed to the addComponent() method to the internal componentIndex', function() {
+        var resultString = 'Constructor "Example" was mounted.';
+        var moduleParserInstance = new window.ComponentDomParser({
+            dataSelector: 'app',
+            componentIndex: {}
+        });
+
+        moduleParserInstance.addComponent('Example', function(el) {
+            el.innerHTML = resultString;
+        });
+
+        moduleParserInstance.parse();
+
+        expect(testElement.innerHTML).toBe(resultString);
     });
 
     afterEach(function() {

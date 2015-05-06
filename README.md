@@ -91,10 +91,12 @@ Type: `Function`
 
 The Callback which get's executed on each mount of a component. Usefull if you want to execute custom code on each initialization of a component. This function get's called with the created instance as the first argument.
 
-### options.fallback
+### options.nonIndexedComponentPolicies
 Type: `Object`
 
-An optional map of matchers and functions that are executed, if the desired component is not listed in the `componentIndex`.
+An optional map of matchers and functions that are executed.
+
+Usefull for asynchronous loading of Components - If the desired `componentKey` is not listed in the `componentIndex` in the moment of the `.parse()`, the matching fallback Constructor will be applied.
 
 Keys are evaluated as wildcarded component keys, which are matched against the component key of each `HTML Element` in question.
 
@@ -106,13 +108,13 @@ Example:
 var parser = new window.ComponentDomParser({
     dataSelector: 'app',
     componentIndex: {},
-    fallback: {
+    nonIndexedComponentPolicies: {
 			'MyNamespace/*' : function(componentKey, el) {
 				return function(el) {
 					el.innerHTML = '"' + componentKey + '" was loaded!';
 				};
 			},
-			'*' : function(componentKey) {
+			'*' : function(componentKey, el) {
 				return function(el) {
 					el.innerHTML = '"' + componentKey + '" not found!';
 				};
@@ -135,9 +137,19 @@ MyNamespace/SomethingElse was loaded!
 SomethingCompletelyDifferent not found!
 ```
 
+#### options.isLoggingEnabled
+Type: `Boolean`
+
+Enables logging messages to the UAs console object for debugging purposes.
+
+
 ### Methods
 #### parser.parse(contextElement);
 Will parse the given `contextElement`, which is optional and will fall back to the `document.body`, for matching elements and will initiate a Constructor mount.
+
+#### parser.addComponent(componentKey, Component);
+Adds the given `Component` Constructor to the internal `componentIndex`. Usefull for asynchronous loaded Components.
+Note that you still need to (re-)parse the node/document after adding components.
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
