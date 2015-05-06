@@ -91,11 +91,6 @@ Type: `Function`
 
 The Callback which get's executed on each mount of a component. Usefull if you want to execute custom code on each initialization of a component. This function get's called with the created instance as the first argument.
 
-### options.contextElement
-Type: `HTMLElement`
-
-The optional content on which the parser is based on, if no context is defined, the parser will use `window.document.body` as the context.
-
 ### options.fallback
 Type: `Object`
 
