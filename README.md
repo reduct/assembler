@@ -94,7 +94,9 @@ The Callback which get's executed on each mount of a component. Usefull if you w
 ### options.fallback
 Type: `Object`
 
-An optional map of matchers and functions that are executed, if the desired component is not listed in the `componentIndex`.
+An optional map of matchers and functions that are executed.
+
+Usefull for asynchronous loading of Components - If the desired component is not listed in the `componentIndex` at the moment of the `.parse()`, the matching fallback Constructor will be applied.
 
 Keys are evaluated as wildcarded component keys, which are matched against the component key of each `HTML Element` in question.
 
@@ -112,7 +114,7 @@ var parser = new window.ComponentDomParser({
 					el.innerHTML = '"' + componentKey + '" was loaded!';
 				};
 			},
-			'*' : function(componentKey) {
+			'*' : function(componentKey, el) {
 				return function(el) {
 					el.innerHTML = '"' + componentKey + '" not found!';
 				};
