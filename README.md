@@ -137,6 +137,12 @@ MyNamespace/SomethingElse was loaded!
 SomethingCompletelyDifferent not found!
 ```
 
+#### options.isLoggingEnabled
+Type: `Boolean`
+
+Enables logging messages to the UAs console object for debugging purposes.
+
+
 ### Methods
 #### parser.parse(contextElement);
 Will parse the given `contextElement`, which is optional and will fall back to the `document.body`, for matching elements and will initiate a Constructor mount.

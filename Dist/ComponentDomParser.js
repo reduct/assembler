@@ -47,8 +47,8 @@
         this.dataSelector = options.dataSelector;
         this.componentIndex = options.componentIndex;
         this.componentDidMountCallback = options.componentDidMountCallback;
-
         this.nonIndexedComponentPolicies = options.nonIndexedComponentPolicies || null;
+        this._isLoggingEnabled = false || options.isLoggingEnabled;
         this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
         this._policyRulesRegex = this._policyRules ? this._policyRules.map(function (policyRule) {
             return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
@@ -89,8 +89,8 @@
                 if (self._mountedElementsCache.indexOf(node) < 0) {
                     self._mountComponent(node, Component);
                 }
-            } else {
-                console.info("ComponentDomParser Info: Component \"" + componentKey + "\" is not present in the passed componentIndex:", self.componentIndex);
+            } else if (this._isLoggingEnabled) {
+                console.info("ComponentDomParser Info: Component \"" + componentKey + "\" isn`t present in the passed componentIndex while mounting a node.", self.componentIndex, node);
             }
         });
 
