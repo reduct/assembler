@@ -83,7 +83,7 @@
 
         elementNodes.forEach(function(node) {
             let componentKey = node.dataset[self.dataSelector];
-            let Component = self.componentIndex[componentKey] || self._applyFallbackRules(node, componentKey);
+            let Component = self.componentIndex[componentKey] || self._getNonIndexComponentPolicy(node, componentKey);
 
             if(Component) {
                 if(self._mountedElementsCache.indexOf(node) < 0) {
@@ -109,7 +109,7 @@
         return instance;
     };
 
-    ComponentDomParser.prototype._applyFallbackRules = function(node, componentKey) {
+    ComponentDomParser.prototype._getNonIndexComponentPolicy = function(node, componentKey) {
         let nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
 
         if (nonIndexedComponentPolicies) {
