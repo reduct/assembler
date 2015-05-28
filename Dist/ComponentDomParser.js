@@ -1,4 +1,4 @@
-/* ComponentDomParser 0.1.0 | @license MIT */
+/* ComponentDomParser 0.1.1 | @license MIT */
 
 (function (global, factory) {
     "use strict";
