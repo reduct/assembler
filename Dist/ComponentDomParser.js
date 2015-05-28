@@ -89,7 +89,7 @@
                 if (self._mountedElementsCache.indexOf(node) < 0) {
                     self._mountComponent(node, Component);
                 }
-            } else if (this._isLoggingEnabled) {
+            } else if (self._isLoggingEnabled) {
                 console.info("ComponentDomParser Info: Component \"" + componentKey + "\" isn`t present in the passed componentIndex while mounting a node.", self.componentIndex, node);
             }
         });
