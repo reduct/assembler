@@ -1,24 +1,25 @@
 {
-  "name": "componentdomparser",
+  "name": "@reduct/assembler",
   "version": "0.1.1",
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
-  "main": "Dist/ComponentDomParser.js",
+  "main": "Dist/Assembler.js",
   "scripts": {
-    "6to5": "node_modules/.bin/6to5 Src/ComponentDomParser.js --out-file Dist/ComponentDomParser.js --blacklist useStrict",
-    "uglify": "node_modules/.bin/uglifyjs Dist/ComponentDomParser.js -o Dist/ComponentDomParser.min.js --comments -c -m",
+    "6to5": "node_modules/.bin/6to5 Src/Assembler.js --out-file Dist/Assembler.js --blacklist useStrict",
+    "uglify": "node_modules/.bin/uglifyjs Dist/Assembler.js -o Dist/Assembler.min.js --comments -c -m",
     "build": "npm run 6to5 && npm run uglify",
-    "jshint": "node_modules/.bin/jshint Src/ComponentDomParser.js --config Build/JsHintConfig.json",
+    "jshint": "node_modules/.bin/jshint Src/Assembler.js --config Build/JsHintConfig.json",
     "karma": "./node_modules/karma/bin/karma start Build/KarmaConfig.js",
     "test": "npm run build && npm run jshint && npm run karma"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Inkdpixels/ComponentDomParser.git"
+    "url": "https://github.com/reduct/assembler.git"
   },
   "keywords": [
     "dom",
     "parser",
     "domParser",
+    "assembler",
     "spe",
     "modules",
     "components"
@@ -32,9 +33,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Inkdpixels/ComponentDomParser/issues"
+    "url": "https://github.com/reduct/assembler/issues"
   },
-  "homepage": "https://github.com/Inkdpixels/ComponentDomParser",
+  "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
     "6to5": "^3.3.10",
     "glob": "^4.3.5",

@@ -7,7 +7,7 @@ module.exports = function (karmaConfig) {
 		plugins: ['karma-*'],
 		files: [
 			'Tests/**/*.js',
-			'Dist/ComponentDomParser.js'
+			'Dist/Assembler.js'
 		],
 		reporters: ['coverage', 'dots'],
 		colors: true,
@@ -22,7 +22,7 @@ module.exports = function (karmaConfig) {
 
 		// Add commonJS support and create the code coverage.
 		preprocessors: {
-			'Dist/ComponentDomParser.js': ['coverage']
+			'Dist/Assembler.js': ['coverage']
 		},
 
 		// Specify the location of the coverage report.
