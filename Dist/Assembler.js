@@ -1,145 +1,97 @@
-"use strict";
+/* @reduct/assembler x.x.x | @license MIT */
 
-(function (global, factory) {
-    'use strict';
+/**
+ * DRAFT
+ *
+ * let app = assembler();
+ *
+ * app.register(MyComponent);
+ * app.register(YetAnotherComponent)
+ *
+ * app.boot();
+ *
+ *
+ */
 
-    // If the env is browserify, export the factory using the module object.
-    if (typeof module === "object" && typeof module.exports === "object") {
-        module.exports = factory(global);
+'use strict';
 
-        // If the env is AMD, register the Module as 'ComponentDomParser'.
-    } else if (global.define && typeof global.define === "function" && global.define.amd) {
-            global.define("reductAssembler", [], function () {
-                return factory(global);
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var Assembler = (function () {
+    function Assembler() {
+        _classCallCheck(this, Assembler);
+
+        this.marker = 'component';
+        this.selector = '[data-' + this.marker + ']';
+
+        this.index = {};
+        this.components = {};
+    }
+
+    _createClass(Assembler, [{
+        key: 'instantiate',
+        value: function instantiate(element) {
+            var name = element.dataset[this.marker];
+
+            var components = this.components[name] = [].prototype.splice(this.components[name] || []);
+            var Component = this.index[name];
+
+            components.unshift(new Component(element));
+        }
+    }, {
+        key: 'register',
+        value: function register(ComponentClass) {
+            var type = typeof ComponentClass;
+
+            if ('function' !== type) {
+                throw new Error('\'' + type + '\' is not a valid component class.');
+            }
+
+            var name = ComponentClass.name;
+
+            this.index[name] = ComponentClass;
+        }
+    }, {
+        key: 'run',
+        value: function run() {
+            var _this = this;
+
+            var elements = [].prototype.slice(document.querySelectorAll(this.selector));
+            var names = Object.keys(this.index);
+
+            //
+            // Find all elements which are instantiable.
+            //
+            elements.filter(function (element) {
+                return !! ~names.indexOf(element.dataset[_this.marker]);
+            }).forEach(function (element) {
+                return _this.instantiate(element);
             });
-
-            // If the env is a browser(without CJS or AMD support), export the factory into the global window object.
-        } else {
-                global.reductAssembler = factory(global);
-            }
-})(window, function (global) {
-    'use strict';
-
-    var doc = global.document;
-
-    /*
-     * Assembler
-     * @param options {Object} The options Object which initializes the parser.
-     * @example
-     * // Initialize a new instance of the ComponentDomParser.
-     * var parser = new window.reductAssembler({
-     *     dataSelector: 'app',
-     *     componentIndex: {
-     *         'myApplication': function(el) { el.innerHTML = 'myApplication initialized!' }
-     *     },
-     *     componentDidMountCallback: function(instance) {
-     *         console.log(instance);
-     *     }
-     * });
-     *
-     * // Parse the document for all [data-app] nodes.
-     * parser.parse();
-     * @constructor
-     */
-    var Assembler = function Assembler(options) {
-        this._checkForRequiredConstants(options);
-
-        this.dataSelector = options.dataSelector;
-        this.componentIndex = options.componentIndex;
-        this.componentDidMountCallback = options.componentDidMountCallback;
-        this.nonIndexedComponentPolicies = options.nonIndexedComponentPolicies || null;
-        this._isLoggingEnabled = false || options.isLoggingEnabled;
-        this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
-        this._policyRulesRegex = this._policyRules ? this._policyRules.map(function (policyRule) {
-            return new RegExp('^' + policyRule.replace(/[^\w\s]/g, '\$&').replace(/\*/g, '\\w+.*') + '$');
-        }) : null;
-        this._mountedElementsCache = [];
-    };
-
-    Assembler.prototype._checkForRequiredConstants = function (options) {
-        if (!options) {
-            throw new Error('@reduct/assembler Error: No option object was specified.');
         }
-
-        if (!options.dataSelector) {
-            throw new Error('@reduct/assembler Error: No dataSelector was specified.');
-        }
-
-        if (!options.componentIndex) {
-            throw new Error('@reduct/assembler Error: No componentIndex was specified.');
-        }
-
-        if (options.componentDidMountCallback && typeof options.componentDidMountCallback !== 'function') {
-            throw new Error('@reduct/assembler Error: The componentDidMountCallback option must be a function.');
-        }
-    };
-
-    Assembler.prototype.parse = function (contextElement) {
-        contextElement = contextElement || doc.body;
-
-        var elementNodeList = contextElement.querySelectorAll('[data-' + this.dataSelector + ']');
-        var elementNodes = Array.prototype.slice.call(elementNodeList, 0);
-        var self = this;
-
-        elementNodes.forEach(function (node) {
-            var componentKey = node.dataset[self.dataSelector];
-            var Component = self.componentIndex[componentKey];
-            var FallBackComponent = self._getNonIndexComponentPolicy(node, componentKey);
-
-            if (Component) {
-                if (self._mountedElementsCache.indexOf(node) < 0) {
-                    self._mountComponent(node, Component);
-                }
-            } else if (FallBackComponent) {
-                self._mountComponent(node, FallBackComponent);
-            } else if (self._isLoggingEnabled) {
-                console.info('Assembler Info: Component "' + componentKey + '" isn`t present in the passed componentIndex while mounting a node.', self.componentIndex, node);
-            }
-        });
-
-        return this;
-    };
-
-    Assembler.prototype._mountComponent = function (node, Component) {
-        var instance = new Component(node);
-
-        this._mountedElementsCache.push(node);
-
-        if (this.componentDidMountCallback) {
-            this.componentDidMountCallback(instance);
-        }
-
-        return instance;
-    };
-
-    Assembler.prototype._getNonIndexComponentPolicy = function (node, componentKey) {
-        var nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
-
-        if (nonIndexedComponentPolicies) {
-            var policyRule = null;
-            var policyRuleRegex = null;
-
-            for (var i = 0; (policyRule = this._policyRules[i]) && (policyRuleRegex = this._policyRulesRegex[i]); i++) {
-                if (componentKey.match(policyRuleRegex)) {
-                    var policyHandler = nonIndexedComponentPolicies[policyRule];
-                    var policyConstructor = policyHandler(componentKey, node);
-
-                    if (policyConstructor) {
-                        return policyConstructor;
-                    }
-                }
-            }
-        }
-
-        return false;
-    };
-
-    Assembler.prototype.addComponent = function (componentKey, Component) {
-        this.componentIndex[componentKey] = Component;
-
-        return this;
-    };
+    }]);
 
     return Assembler;
-});
-/* @reduct/assembler 0.1.2 | @license MIT */
+})();
+
+exports['default'] = function () {
+    var assembler = new Assembler();
+
+    var api = {
+        register: function register(ComponentClass) {
+            return assembler.register(ComponentClass);
+        },
+        boot: function boot() {
+            return assembler.boot();
+        }
+    };
+
+    return api;
+};
+
+module.exports = exports['default'];

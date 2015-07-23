@@ -4,12 +4,11 @@
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
   "main": "Dist/Assembler.js",
   "scripts": {
-    "test": "npm run build && npm run jshint && npm run karma",
+    "test": "TEST=true mocha --compilers js:babel/register ./Tests/*.spec.js",
     "build": "npm run babel && npm run uglify",
-    "karma": "./node_modules/karma/bin/karma start Build/KarmaConfig.js",
-    "babel": "./node_modules/.bin/babel Src/Assembler.js --out-file Dist/Assembler.js",
-    "uglify": "node_modules/.bin/uglifyjs Dist/Assembler.js -o Dist/Assembler.min.js --comments -c -m",
-    "jshint": "node_modules/.bin/jshint Src/Assembler.js --config Build/JsHintConfig.json"
+    "babel": "babel Src/Assembler.js --out-file Dist/Assembler.js",
+    "uglify": "uglifyjs Dist/Assembler.js -o Dist/Assembler.min.js --comments -c -m",
+    "jshint": "jshint Src/Assembler.js --config Build/.jshintrc"
   },
   "repository": {
     "type": "git",
@@ -24,11 +23,21 @@
     "modules",
     "components"
   ],
-  "author": [
+  "author": "reduct",
+  "contributors": [
     {
       "name": "Tyll Weiß",
       "email": "inkdpixels@gmail.com",
       "url": "https://github.com/Inkdpixels/"
+    },
+    {
+      "name": "André König",
+      "email": "andre.koenig@posteo.de",
+      "url": "https://github.com/akoenig/"
+    },
+    {
+      "name": "Wilhelm Behncke",
+      "url": "https://github.com/grebaldi"
     }
   ],
   "license": "MIT",
@@ -38,14 +47,10 @@
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
     "babel": "^5.8.3",
-    "glob": "^4.3.5",
-    "jasmine-core": "^2.2.0",
-    "jshint": "^2.6.0",
-    "karma": "^0.12.31",
-    "karma-commonjs": "0.0.13",
-    "karma-coverage": "^0.2.7",
-    "karma-jasmine": "^0.3.5",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "uglify-js": "^2.4.16"
+    "chai": "^3.2.0",
+    "jsdom": "^5.6.1",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5",
+    "uglifyjs": "^2.4.10"
   }
 }
