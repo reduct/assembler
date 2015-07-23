@@ -1,0 +1,10 @@
+engines:
+  eslint:
+    enabled: true
+ratings:
+  paths:
+    - "Src/**"
+exclude_paths:
+ - "Tests/**"
+ - "Dist/**"
+ - "Build/**"
