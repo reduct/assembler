@@ -83,12 +83,15 @@
 
         elementNodes.forEach(function(node) {
             let componentKey = node.dataset[self.dataSelector];
-            let Component = self.componentIndex[componentKey] || self._getNonIndexComponentPolicy(node, componentKey);
+            let Component = self.componentIndex[componentKey];
+            let FallBackComponent =  self._getNonIndexComponentPolicy(node, componentKey);
 
             if(Component) {
                 if(self._mountedElementsCache.indexOf(node) < 0) {
                     self._mountComponent(node, Component);
                 }
+            } else if(FallBackComponent) {
+                self._mountComponent(node, Component);
             } else if(self._isLoggingEnabled) {
                 console.info('ComponentDomParser Info: Component "' + componentKey + '" isn`t present in the passed componentIndex while mounting a node.', self.componentIndex, node);
             }
