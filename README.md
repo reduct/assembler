@@ -1,4 +1,5 @@
-# ComponentDomParser [![Dependency Status](https://david-dm.org/Inkdpixels/ComponentDomParser.svg)](https://david-dm.org/Inkdpixels/ComponentDomParser) [![devDependency Status](https://david-dm.org/Inkdpixels/ComponentDomParser/dev-status.svg)](https://david-dm.org/Inkdpixels/ComponentDomParser#info=devDependencies) [![Build Status](https://travis-ci.org/Inkdpixels/ComponentDomParser.png?branch=master)](https://travis-ci.org/Inkdpixels/ComponentDomParser) [![Code Climate](https://codeclimate.com/github/Inkdpixels/ComponentDomParser/badges/gpa.svg)](https://codeclimate.com/github/Inkdpixels/ComponentDomParser) [![Test Coverage](https://codeclimate.com/github/Inkdpixels/ComponentDomParser/badges/coverage.svg)](https://codeclimate.com/github/Inkdpixels/ComponentDomParser)
+# @reduct/assembler
+[![Dependency Status](https://david-dm.org/reduct/assembler.svg)](https://david-dm.org/reduct/assembler) [![devDependency Status](https://david-dm.org/reduct/assembler/dev-status.svg)](https://david-dm.org/reduct/assembler#info=devDependencies) [![Build Status](https://travis-ci.org/reduct/assembler.png?branch=master)](https://travis-ci.org/reduct/assembler) [![Code Climate](https://codeclimate.com/github/reduct/assembler/badges/gpa.svg)](https://codeclimate.com/github/reduct/assembler) [![Test Coverage](https://codeclimate.com/github/reduct/assembler/badges/coverage.svg)](https://codeclimate.com/github/reduct/assembler)
 
 > Parses a DOM Node for tags and executes the matching Constructor on each element. This module embraces the practice of a 'Single Point of Entry'-Application(SPE).
 
@@ -18,24 +19,24 @@ TL;DR: Use a parser, to reduce duplicate code, enhance performance and reduce th
 ## Install
 With npm, use the familiar syntax e.g.:
 ```shell
-npm install componentdomparser --save
+npm install @reduct/assembler --save
 ```
 
-once the ComponentDomParser package is installed, just require it in the main application file.
+once the Assembler package is installed, just require it in the main application file.
 ```js
-var ComponentDomParser = require("componentdomparser");
+var Assembler = require('@reduct/assembler');
 ```
 
-This package also supports AMD/RequireJS, it is defined as `ComponentDomParser`. Aren't using AMD/CommonJS? Just grab a [release](https://github.com/Inkdpixels/ComponentDomParser/releases), include the `Dist/ComponentDomParser.min.js` and access the loader via the following global:
+This package also supports AMD/RequireJS, it is defined as `reductAssembler`. Aren't using AMD/CommonJS? Just grab a [release](https://github.com/reduct/assembler/releases), include the `Dist/Assembler.min.js` and access the loader via the following global:
 ```js
-var ComponentDomParser = window.ComponentDomParser;
+var Assembler = window.reductAssembler;
 ```
 
 ### Configuration
 In the main application file, create a new instance of the Constructor e.g.:
 ```js
-// Initialize a new instance of the ComponentDomParser.
-var parser = new ComponentDomParser({
+// Initialize a new instance of the Assembler.
+var parser = new Assembler({
     dataSelector: 'app',
     componentIndex: {
         'myApplication': function(el) { el.innerHTML = 'myApplication initialized!' }
@@ -69,15 +70,15 @@ var MyOtherApplication = function(el) {
 	console.log('MyOtherApplication initialized on: ', el);
 };
 
-// Initialize a new instance of the ComponentDomParser.
+// Initialize a new instance of the Assembler.
 var appIndex = {
 	myApplication: MyApplication,
 	myOtherApplication: MyOtherApplication
 	// ... other apps
 };
 
-// Initialize a new instance of the ComponentDomParser.
-var parser = new window.ComponentDomParser({
+// Initialize a new instance of the Assembler.
+var parser = new Assembler({
 	dataSelector: 'app',
     componentIndex: appIndex
 });
@@ -105,7 +106,7 @@ Values are functions, taking `componentKey (String)` and `node (HTMLElement)` as
 Example:
 
 ```js
-var parser = new window.ComponentDomParser({
+var parser = new Assembler({
     dataSelector: 'app',
     componentIndex: {},
     nonIndexedComponentPolicies: {

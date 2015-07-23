@@ -1,4 +1,4 @@
-describe('ComponentDomParser: Integration', function() {
+describe('Assembler: Integration', function() {
     var testElement;
 
     beforeEach(function() {
@@ -16,7 +16,7 @@ describe('ComponentDomParser: Integration', function() {
                 this.el.innerHTML = resultString
             }
         }
-        var moduleParserInstance = new window.ComponentDomParser({
+        var moduleParserInstance = new window.reductAssembler({
             dataSelector: 'app',
             componentIndex: componentIndex
         });
@@ -34,7 +34,7 @@ describe('ComponentDomParser: Integration', function() {
             componentDidMountCallback: function(instance) {}
         }
         spyOn(callbacks, 'componentDidMountCallback');
-        var moduleParserInstance = new window.ComponentDomParser({
+        var moduleParserInstance = new window.reductAssembler({
             dataSelector: 'app',
             componentIndex: componentIndex,
             componentDidMountCallback: callbacks.componentDidMountCallback
@@ -46,7 +46,7 @@ describe('ComponentDomParser: Integration', function() {
     });
 
     it('should call a matching nonIndexedComponentPoliciy handler when the desired module is not listed under "componentIndex"', function() {
-        var moduleParserInstance = new window.ComponentDomParser({
+        var moduleParserInstance = new window.reductAssembler({
                 dataSelector: 'app',
                 componentIndex: {},
                 nonIndexedComponentPolicies: {
@@ -65,7 +65,7 @@ describe('ComponentDomParser: Integration', function() {
 
     it('should allow nonIndexedComponentPoliciies rules to be defined with wild cards', function() {
         testElement.setAttribute('data-app', 'Some/Example');
-        var moduleParserInstance = new window.ComponentDomParser({
+        var moduleParserInstance = new window.reductAssembler({
                 dataSelector: 'app',
                 componentIndex: {},
                 nonIndexedComponentPolicies: {
@@ -87,7 +87,7 @@ describe('ComponentDomParser: Integration', function() {
             'Example' : function() {},
             '*' : function() {}
         };
-        var moduleParserInstance = new window.ComponentDomParser({
+        var moduleParserInstance = new window.reductAssembler({
             dataSelector: 'app',
             componentIndex: {},
             nonIndexedComponentPolicies: policies
@@ -111,7 +111,7 @@ describe('ComponentDomParser: Integration', function() {
             'Ex*' : function() {},
             '*' : function() {}
         };
-        var moduleParserInstance = new window.ComponentDomParser({
+        var moduleParserInstance = new window.reductAssembler({
             dataSelector: 'app',
             componentIndex: {},
             nonIndexedComponentPolicies: policies
@@ -133,7 +133,7 @@ describe('ComponentDomParser: Integration', function() {
 
     it('should add the new Component passed to the addComponent() method to the internal componentIndex', function() {
         var resultString = 'Constructor "Example" was mounted.';
-        var moduleParserInstance = new window.ComponentDomParser({
+        var moduleParserInstance = new window.reductAssembler({
             dataSelector: 'app',
             componentIndex: {}
         });

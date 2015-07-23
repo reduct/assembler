@@ -1,4 +1,4 @@
-/* ComponentDomParser 0.1.1 | @license MIT */
+/* @reduct/assembler 0.1.2 | @license MIT */
 
 (function (global, factory) {
     "use strict";
@@ -9,13 +9,13 @@
 
         // If the env is AMD, register the Module as 'ComponentDomParser'.
     } else if (global.define && typeof global.define === "function" && global.define.amd) {
-        global.define("ComponentDomParser", [], function () {
+        global.define("reductAssembler", [], function () {
             return factory(global);
         });
 
         // If the env is a browser(without CJS or AMD support), export the factory into the global window object.
     } else {
-        global.ComponentDomParser = factory(global);
+        global.reductAssembler = factory(global);
     }
 })(window, function (global) {
     "use strict";
@@ -23,11 +23,11 @@
     var doc = global.document;
 
     /*
-     * ComponentDomParser
+     * Assembler
      * @param options {Object} The options Object which initializes the parser.
      * @example
      * // Initialize a new instance of the ComponentDomParser.
-     * var parser = new window.ComponentDomParser({
+     * var parser = new window.reductAssembler({
      *     dataSelector: 'app',
      *     componentIndex: {
      *         'myApplication': function(el) { el.innerHTML = 'myApplication initialized!' }
@@ -41,7 +41,7 @@
      * parser.parse();
      * @constructor
      */
-    var ComponentDomParser = function (options) {
+    var Assembler = function (options) {
         this._checkForRequiredConstants(options);
 
         this.dataSelector = options.dataSelector;
@@ -51,30 +51,30 @@
         this._isLoggingEnabled = false || options.isLoggingEnabled;
         this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
         this._policyRulesRegex = this._policyRules ? this._policyRules.map(function (policyRule) {
-            return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
+            return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+.*") + "$");
         }) : null;
         this._mountedElementsCache = [];
     };
 
-    ComponentDomParser.prototype._checkForRequiredConstants = function (options) {
+    Assembler.prototype._checkForRequiredConstants = function (options) {
         if (!options) {
-            throw new Error("ComponentDomParser Error: No option object was specified.");
+            throw new Error("@reduct/assembler Error: No option object was specified.");
         }
 
         if (!options.dataSelector) {
-            throw new Error("ComponentDomParser Error: No dataSelector was specified.");
+            throw new Error("@reduct/assembler Error: No dataSelector was specified.");
         }
 
         if (!options.componentIndex) {
-            throw new Error("ComponentDomParser Error: No componentIndex was specified.");
+            throw new Error("@reduct/assembler Error: No componentIndex was specified.");
         }
 
         if (options.componentDidMountCallback && typeof options.componentDidMountCallback !== "function") {
-            throw new Error("ComponentDomParser Error: The componentDidMountCallback option must be a function.");
+            throw new Error("@reduct/assembler Error: The componentDidMountCallback option must be a function.");
         }
     };
 
-    ComponentDomParser.prototype.parse = function (contextElement) {
+    Assembler.prototype.parse = function (contextElement) {
         contextElement = contextElement || doc.body;
 
         var elementNodeList = contextElement.querySelectorAll("[data-" + this.dataSelector + "]");
@@ -83,21 +83,24 @@
 
         elementNodes.forEach(function (node) {
             var componentKey = node.dataset[self.dataSelector];
-            var Component = self.componentIndex[componentKey] || self._getNonIndexComponentPolicy(node, componentKey);
+            var Component = self.componentIndex[componentKey];
+            var FallBackComponent = self._getNonIndexComponentPolicy(node, componentKey);
 
             if (Component) {
                 if (self._mountedElementsCache.indexOf(node) < 0) {
                     self._mountComponent(node, Component);
                 }
+            } else if (FallBackComponent) {
+                self._mountComponent(node, FallBackComponent);
             } else if (self._isLoggingEnabled) {
-                console.info("ComponentDomParser Info: Component \"" + componentKey + "\" isn`t present in the passed componentIndex while mounting a node.", self.componentIndex, node);
+                console.info("Assembler Info: Component \"" + componentKey + "\" isn`t present in the passed componentIndex while mounting a node.", self.componentIndex, node);
             }
         });
 
         return this;
     };
 
-    ComponentDomParser.prototype._mountComponent = function (node, Component) {
+    Assembler.prototype._mountComponent = function (node, Component) {
         var instance = new Component(node);
 
         this._mountedElementsCache.push(node);
@@ -109,7 +112,7 @@
         return instance;
     };
 
-    ComponentDomParser.prototype._getNonIndexComponentPolicy = function (node, componentKey) {
+    Assembler.prototype._getNonIndexComponentPolicy = function (node, componentKey) {
         var nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
 
         if (nonIndexedComponentPolicies) {
@@ -132,11 +135,11 @@
     };
 
 
-    ComponentDomParser.prototype.addComponent = function (componentKey, Component) {
+    Assembler.prototype.addComponent = function (componentKey, Component) {
         this.componentIndex[componentKey] = Component;
 
         return this;
     };
 
-    return ComponentDomParser;
+    return Assembler;
 });
