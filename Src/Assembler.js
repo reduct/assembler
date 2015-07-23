@@ -91,7 +91,7 @@
                     self._mountComponent(node, Component);
                 }
             } else if(FallBackComponent) {
-                self._mountComponent(node, Component);
+                self._mountComponent(node, FallBackComponent);
             } else if(self._isLoggingEnabled) {
                 console.info('Assembler Info: Component "' + componentKey + '" isn`t present in the passed componentIndex while mounting a node.', self.componentIndex, node);
             }
