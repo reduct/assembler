@@ -1,4 +1,4 @@
-/* @reduct/assembler 0.1.1 | @license MIT */
+/* @reduct/assembler 0.1.2 | @license MIT */
 
 (function(global, factory) {
     'use strict';

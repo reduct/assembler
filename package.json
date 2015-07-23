@@ -1,6 +1,6 @@
 {
   "name": "@reduct/assembler",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
   "main": "Dist/Assembler.js",
   "scripts": {
