@@ -51,7 +51,7 @@
         this._isLoggingEnabled = false || options.isLoggingEnabled;
         this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
         this._policyRulesRegex = this._policyRules ? this._policyRules.map(function (policyRule) {
-            return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+") + "$");
+            return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+.*") + "$");
         }) : null;
         this._mountedElementsCache = [];
     };
