@@ -4,12 +4,12 @@
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
   "main": "Dist/Assembler.js",
   "scripts": {
-    "6to5": "node_modules/.bin/6to5 Src/Assembler.js --out-file Dist/Assembler.js --blacklist useStrict",
-    "uglify": "node_modules/.bin/uglifyjs Dist/Assembler.js -o Dist/Assembler.min.js --comments -c -m",
-    "build": "npm run 6to5 && npm run uglify",
-    "jshint": "node_modules/.bin/jshint Src/Assembler.js --config Build/JsHintConfig.json",
+    "test": "npm run build && npm run jshint && npm run karma",
+    "build": "npm run babel && npm run uglify",
     "karma": "./node_modules/karma/bin/karma start Build/KarmaConfig.js",
-    "test": "npm run build && npm run jshint && npm run karma"
+    "babel": "./node_modules/.bin/babel Src/Assembler.js --out-file Dist/Assembler.js",
+    "uglify": "node_modules/.bin/uglifyjs Dist/Assembler.js -o Dist/Assembler.min.js --comments -c -m",
+    "jshint": "node_modules/.bin/jshint Src/Assembler.js --config Build/JsHintConfig.json"
   },
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "6to5": "^3.3.10",
+    "babel": "^5.8.3",
     "glob": "^4.3.5",
     "jasmine-core": "^2.2.0",
     "jshint": "^2.6.0",

@@ -1,7 +1,8 @@
 # @reduct/assembler
-[![Dependency Status](https://david-dm.org/reduct/assembler.svg)](https://david-dm.org/reduct/assembler) [![devDependency Status](https://david-dm.org/reduct/assembler/dev-status.svg)](https://david-dm.org/reduct/assembler#info=devDependencies) [![Build Status](https://travis-ci.org/reduct/assembler.png?branch=master)](https://travis-ci.org/reduct/assembler) [![Code Climate](https://codeclimate.com/github/reduct/assembler/badges/gpa.svg)](https://codeclimate.com/github/reduct/assembler) [![Test Coverage](https://codeclimate.com/github/reduct/assembler/badges/coverage.svg)](https://codeclimate.com/github/reduct/assembler)
+[![Build Status](https://travis-ci.org/reduct/assembler.svg)](https://travis-ci.org/reduct/assembler) [![Dependency Status](https://david-dm.org/reduct/assembler.svg)](https://david-dm.org/reduct/assembler) [![devDependency Status](https://david-dm.org/reduct/assembler/dev-status.svg)](https://david-dm.org/reduct/assembler#info=devDependencies) [![Code Climate](https://codeclimate.com/github/reduct/assembler/badges/gpa.svg)](https://codeclimate.com/github/reduct/assembler) [![Test Coverage](https://codeclimate.com/github/reduct/assembler/badges/coverage.svg)](https://codeclimate.com/github/reduct/assembler/coverage)
 
 > Parses a DOM Node for tags and executes the matching Constructor on each element. This module embraces the practice of a 'Single Point of Entry'-Application(SPE).
+
 
 ## Why?
 Using a single point of entry reduces code and promotes maintainability. Instead of writing the following accross all of your sites/apps components:
@@ -15,6 +16,7 @@ $('.myAwesomeApp').each(function(index, node) {
 ... you will just create a parser, which does all the initializing logic for you. It also reduces the number of operations in the DOM, which is great for performance since DOM operations are generally slow. Last but not least, your apps/components are free of selectors, you don't need to adjust your component if another project forbids the use of classes or a certain `data-*` attribute as a JS selector.
 
 TL;DR: Use a parser, to reduce duplicate code, enhance performance and reduce the dependence of selectors in your JS.
+
 
 ## Install
 With npm, use the familiar syntax e.g.:
@@ -31,6 +33,7 @@ This package also supports AMD/RequireJS, it is defined as `reductAssembler`. Ar
 ```js
 var Assembler = window.reductAssembler;
 ```
+
 
 ### Configuration
 In the main application file, create a new instance of the Constructor e.g.:
@@ -49,6 +52,7 @@ var parser = new Assembler({
 // Parse the document for all [data-app] nodes.
 parser.parse();
 ```
+
 
 ### Options
 #### options.dataSelector
@@ -152,8 +156,10 @@ Will parse the given `contextElement`, which is optional and will fall back to t
 Adds the given `Component` Constructor to the internal `componentIndex`. Useful for asynchronous loaded Components.
 Note that you still need to (re-)parse the node/document after adding components.
 
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
+
 
 ## License
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR

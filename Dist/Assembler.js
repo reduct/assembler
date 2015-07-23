@@ -1,7 +1,7 @@
-/* @reduct/assembler 0.1.2 | @license MIT */
+"use strict";
 
 (function (global, factory) {
-    "use strict";
+    'use strict';
 
     // If the env is browserify, export the factory using the module object.
     if (typeof module === "object" && typeof module.exports === "object") {
@@ -9,16 +9,16 @@
 
         // If the env is AMD, register the Module as 'ComponentDomParser'.
     } else if (global.define && typeof global.define === "function" && global.define.amd) {
-        global.define("reductAssembler", [], function () {
-            return factory(global);
-        });
+            global.define("reductAssembler", [], function () {
+                return factory(global);
+            });
 
-        // If the env is a browser(without CJS or AMD support), export the factory into the global window object.
-    } else {
-        global.reductAssembler = factory(global);
-    }
+            // If the env is a browser(without CJS or AMD support), export the factory into the global window object.
+        } else {
+                global.reductAssembler = factory(global);
+            }
 })(window, function (global) {
-    "use strict";
+    'use strict';
 
     var doc = global.document;
 
@@ -41,7 +41,7 @@
      * parser.parse();
      * @constructor
      */
-    var Assembler = function (options) {
+    var Assembler = function Assembler(options) {
         this._checkForRequiredConstants(options);
 
         this.dataSelector = options.dataSelector;
@@ -51,33 +51,33 @@
         this._isLoggingEnabled = false || options.isLoggingEnabled;
         this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
         this._policyRulesRegex = this._policyRules ? this._policyRules.map(function (policyRule) {
-            return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+.*") + "$");
+            return new RegExp('^' + policyRule.replace(/[^\w\s]/g, '\$&').replace(/\*/g, '\\w+.*') + '$');
         }) : null;
         this._mountedElementsCache = [];
     };
 
     Assembler.prototype._checkForRequiredConstants = function (options) {
         if (!options) {
-            throw new Error("@reduct/assembler Error: No option object was specified.");
+            throw new Error('@reduct/assembler Error: No option object was specified.');
         }
 
         if (!options.dataSelector) {
-            throw new Error("@reduct/assembler Error: No dataSelector was specified.");
+            throw new Error('@reduct/assembler Error: No dataSelector was specified.');
         }
 
         if (!options.componentIndex) {
-            throw new Error("@reduct/assembler Error: No componentIndex was specified.");
+            throw new Error('@reduct/assembler Error: No componentIndex was specified.');
         }
 
-        if (options.componentDidMountCallback && typeof options.componentDidMountCallback !== "function") {
-            throw new Error("@reduct/assembler Error: The componentDidMountCallback option must be a function.");
+        if (options.componentDidMountCallback && typeof options.componentDidMountCallback !== 'function') {
+            throw new Error('@reduct/assembler Error: The componentDidMountCallback option must be a function.');
         }
     };
 
     Assembler.prototype.parse = function (contextElement) {
         contextElement = contextElement || doc.body;
 
-        var elementNodeList = contextElement.querySelectorAll("[data-" + this.dataSelector + "]");
+        var elementNodeList = contextElement.querySelectorAll('[data-' + this.dataSelector + ']');
         var elementNodes = Array.prototype.slice.call(elementNodeList, 0);
         var self = this;
 
@@ -93,7 +93,7 @@
             } else if (FallBackComponent) {
                 self._mountComponent(node, FallBackComponent);
             } else if (self._isLoggingEnabled) {
-                console.info("Assembler Info: Component \"" + componentKey + "\" isn`t present in the passed componentIndex while mounting a node.", self.componentIndex, node);
+                console.info('Assembler Info: Component "' + componentKey + '" isn`t present in the passed componentIndex while mounting a node.', self.componentIndex, node);
             }
         });
 
@@ -134,7 +134,6 @@
         return false;
     };
 
-
     Assembler.prototype.addComponent = function (componentKey, Component) {
         this.componentIndex[componentKey] = Component;
 
@@ -143,3 +142,4 @@
 
     return Assembler;
 });
+/* @reduct/assembler 0.1.2 | @license MIT */
