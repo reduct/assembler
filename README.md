@@ -36,7 +36,6 @@ var Assembler = window.reductAssembler;
 ### Configuration
 In the main application file, create a new instance of the Constructor e.g.:
 ```js
-// Initialize a new instance of the Assembler.
 import MyComponent from 'MyComponent';
 import YetAnotherComponent from 'YetAnotherComponent';
 
