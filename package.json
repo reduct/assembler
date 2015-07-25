@@ -4,11 +4,7 @@
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
   "main": "Dist/Assembler.js",
   "scripts": {
-    "test": "TEST=true mocha --compilers js:babel/register ./Tests/*.spec.js",
-    "build": "npm run babel && npm run uglify",
-    "babel": "babel Src/Assembler.js --out-file Dist/Assembler.js",
-    "uglify": "uglifyjs Dist/Assembler.js -o Dist/Assembler.min.js --comments -c -m",
-    "jshint": "jshint Src/Assembler.js --config Build/.jshintrc"
+    "test": "TEST=true mocha --compilers js:babel/register ./Tests/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -40,17 +36,25 @@
       "url": "https://github.com/grebaldi"
     }
   ],
-  "license": "MIT",
+  "license": {
+    "type": "MIT",
+    "url": "http://www.opensource.org/licenses/mit-license.php"
+  },
   "bugs": {
     "url": "https://github.com/reduct/assembler/issues"
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "babel": "^5.8.3",
+    "@reduct/build-tools": "^0.1.1",
     "chai": "^3.2.0",
     "jsdom": "^5.6.1",
-    "jshint": "^2.8.0",
-    "mocha": "^2.2.5",
-    "uglifyjs": "^2.4.10"
+    "mocha": "^2.2.5"
+  },
+  "reduct": {
+    "sourceFolder": "Src/",
+    "distributionFolder": "Dist/",
+    "entryFile": "Assembler.js",
+    "globalPackageName": "reductAssembler",
+    "coverageReportFile": "lcov.info"
   }
 }

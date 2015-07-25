@@ -1,82 +1,87 @@
-/* @reduct/assembler x.x.x | @license MIT */
+function factory(global, version) {
 
-/**
- * DRAFT
- *
- * import MyComponent from 'MyComponent';
- * import YetAnotherComponent from 'YetAnotherComponent';
- *
- * let app = assembler();
- *
- * app.register(MyComponent);
- * app.register(YetAnotherComponent)
- *
- * app.boot();
- *
- *
- */
+    /**
+     * DRAFT
+     *
+     * import MyComponent from 'MyComponent';
+     * import YetAnotherComponent from 'YetAnotherComponent';
+     *
+     * let app = assembler();
+     *
+     * app.register(MyComponent);
+     * app.register(YetAnotherComponent)
+     *
+     * app.boot();
+     *
+     *
+     */
 
-class Assembler {
+    class Assembler {
 
-    constructor () {
-        this.marker = 'component';
-        this.selector = `data-${this.marker}`;
+        constructor() {
+            this.marker = 'component';
+            this.selector = `data-${this.marker}`;
 
-        this.index = {};
-        this.components = {};
-    }
-
-    instantiate (element) {
-        let name = element.getAttribute(this.selector);
-
-        let components = this.components[name] = [].slice.call(this.components[name] || []);
-        let Component = this.index[name];
-
-        components.unshift(new Component(element)); 
-    }
-
-    register (ComponentClass) {
-        let type = typeof ComponentClass;
-
-        if ('function' !== type) {
-            throw new Error(`'${type}' is not a valid component class.`);
+            this.index = {};
+            this.components = {};
         }
 
-        let name = ComponentClass.name;
+        instantiate(element) {
+            let name = element.getAttribute(this.selector);
 
-        this.index[name] = ComponentClass;
+            let components = this.components[name] = [].slice.call(this.components[name] || []);
+            let Component = this.index[name];
+
+            components.unshift(new Component(element));
+        }
+
+        register(ComponentClass) {
+            let type = typeof ComponentClass;
+
+            if ('function' !== type) {
+                throw new Error(`'${type}' is not a valid component class.`);
+            }
+
+            let name = ComponentClass.name;
+
+            this.index[name] = ComponentClass;
+        }
+
+        boot() {
+            console.log(this.selector);
+            let elements = [].slice.call(document.querySelectorAll(`[${this.selector}]`));
+            let names = Object.keys(this.index);
+
+            //
+            // Find all elements which are instantiable.
+            // Note: `getAttribute` has to be used due to: https://github.com/tmpvar/jsdom/issues/961
+            //
+            elements
+                .filter((element) => !!~names.indexOf(element.getAttribute(this.selector)))
+                .forEach((element) => this.instantiate(element));
+        }
     }
 
-    boot () {
-        console.log(this.selector);
-        let elements = [].slice.call(document.querySelectorAll(`[${this.selector}]`));
-        let names = Object.keys(this.index);
 
-        //
-        // Find all elements which are instantiable.
-        // Note: `getAttribute` has to be used due to: https://github.com/tmpvar/jsdom/issues/961
-        //
-        elements
-            .filter((element) => !!~names.indexOf(element.getAttribute(this.selector)))
-            .forEach((element) => this.instantiate(element));
+    return {
+        Assembler: () => {
+            let assembler = new Assembler();
+
+            let api = {
+                register: (ComponentClass) => assembler.register(ComponentClass),
+                boot: () => assembler.boot()
+            };
+
+            //
+            // Expose additional attributes for assertions.
+            //
+            if (process.env.TEST) {
+                api.index = assembler.index;
+                api.components = assembler.components;
+            }
+
+            return api;
+        },
+        version: version
     }
 }
-
-export default () => {
-    let assembler = new Assembler();
-
-    let api = {
-        register: (ComponentClass) => assembler.register(ComponentClass),
-        boot: () => assembler.boot()
-    };
-
-    //
-    // Expose additional attributes for assertions.
-    //
-    if (process.env.TEST) {
-        api.index = assembler.index;
-        api.components = assembler.components;
-    }
-
-    return api;
-};
