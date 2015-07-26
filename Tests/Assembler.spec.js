@@ -1,9 +1,7 @@
 /* @reduct/assembler x.x.x | @license MIT */
 
 import chai from 'chai';
-
-import assembler from '../Src/Assembler';
-
+import assembler from './../Src/Assembler.js';
 import DOM from './Helpers/DOM';
 
 let expect = chai.expect;
@@ -22,7 +20,7 @@ describe('The "Assembler"', () => {
     beforeEach((done) => DOM.create(mock, done));
 
     it('should be able to create an app', (done) => {
-        let app = assembler();
+        let app = new assembler.Assembler();
 
         expect(app.register).to.be.a('function');
         expect(app.boot).to.be.a('function');
@@ -31,10 +29,10 @@ describe('The "Assembler"', () => {
     });
 
     it('should be able to register component instances', (done) => {
-        let app = assembler();
+        let app = new assembler.Assembler();
 
-        function MyComponent () {};
-
+        function MyComponent() {
+        }
         app.register(MyComponent);
 
         expect(Object.keys(app.index).length).to.equal(1);
@@ -48,7 +46,7 @@ describe('The "Assembler"', () => {
             this.id = 'foo';
         }
 
-        let app = assembler();
+        let app = new assembler.Assembler();
 
         app.register(MyComponent);
 
