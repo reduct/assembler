@@ -19,7 +19,7 @@ describe('The "Assembler"', () => {
     beforeEach((done) => DOM.create(mock, done));
 
     it('should be able to create an app', (done) => {
-        let app = new assembler.Assembler();
+        let app = assembler.Assembler();
 
         expect(app.register).to.be.a('function');
         expect(app.boot).to.be.a('function');
@@ -28,7 +28,7 @@ describe('The "Assembler"', () => {
     });
 
     it('should be able to register component instances', (done) => {
-        let app = new assembler.Assembler();
+        let app = assembler.Assembler();
 
         function MyComponent() {
         }
@@ -46,7 +46,7 @@ describe('The "Assembler"', () => {
             this.id = 'foo';
         }
 
-        let app = new assembler.Assembler();
+        let app = assembler.Assembler();
 
         app.register(MyComponent);
 
