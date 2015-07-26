@@ -1,13 +1,12 @@
 /* @reduct/assembler x.x.x | @license MIT */
 
 import chai from 'chai';
-import assembler from './../Src/Assembler.js';
+import assembler from './../Dist/Assembler.js';
 import DOM from './Helpers/DOM';
 
 let expect = chai.expect;
 
 describe('The "Assembler"', () => {
-
     let mock = `
         <html>
             <head></head>
@@ -33,6 +32,7 @@ describe('The "Assembler"', () => {
 
         function MyComponent() {
         }
+
         app.register(MyComponent);
 
         expect(Object.keys(app.index).length).to.equal(1);

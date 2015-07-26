@@ -4,7 +4,7 @@
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
   "main": "Dist/Assembler.js",
   "scripts": {
-    "test": "TEST=true mocha --compilers js:babel/register ./Tests/*.spec.js"
+    "test": "node_modules/.bin/reduct test"
   },
   "repository": {
     "type": "git",
@@ -45,10 +45,9 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "@reduct/build-tools": "^0.1.2",
+    "@reduct/build-tools": "^0.2.0",
     "chai": "^3.2.0",
-    "jsdom": ">= 0.1.23 < 4.0.0",
-    "mocha": "^2.2.5"
+    "jsdom": ">= 0.1.23 < 4.0.0"
   },
   "reduct": {
     "sourceFolder": "Src/",

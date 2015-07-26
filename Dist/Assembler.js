@@ -125,7 +125,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             //
             // Expose additional attributes for assertions.
             //
-            if (process.env.TEST) {
+            if (process && process.title && process.title.indexOf('node') > -1) {
                 api.index = assembler.index;
                 api.components = assembler.components;
             }
