@@ -4,7 +4,8 @@
   "description": "Parses a DOM Node for tags and executes the matching Constructor on each element.",
   "main": "Dist/Assembler.js",
   "scripts": {
-    "test": "node_modules/.bin/reduct test"
+    "test": "reduct test",
+    "reduct": "reduct"
   },
   "repository": {
     "type": "git",
