@@ -77,7 +77,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             value: function register(ComponentClass) {
                 var type = typeof ComponentClass;
 
-                if ('function' !== type) {
+                if (type !== 'function') {
                     throw new Error("'" + type + "' is not a valid component class.");
                 }
 
@@ -132,6 +132,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             return api;
         },
+
         version: version
     };
 });

@@ -38,7 +38,7 @@ function factory(global, version) {
         register(ComponentClass) {
             let type = typeof ComponentClass;
 
-            if ('function' !== type) {
+            if (type !== 'function') {
                 throw new Error(`'${type}' is not a valid component class.`);
             }
 
@@ -62,7 +62,6 @@ function factory(global, version) {
         }
     }
 
-
     return {
         Assembler: () => {
             let assembler = new Assembler();
@@ -82,6 +81,7 @@ function factory(global, version) {
 
             return api;
         },
+
         version: version
-    }
+    };
 }
