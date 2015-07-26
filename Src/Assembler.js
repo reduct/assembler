@@ -74,7 +74,7 @@ function factory(global, version) {
             //
             // Expose additional attributes for assertions.
             //
-            if (process && process.title && process.title.indexOf('node') > -1) {
+            if (process && process.title && !!~process.title.indexOf('reduct')) {
                 api.index = assembler.index;
                 api.components = assembler.components;
             }
