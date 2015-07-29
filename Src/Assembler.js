@@ -1,4 +1,4 @@
-function factory(global, version) {
+function factory (global, version) {
 
     /**
      * DRAFT
