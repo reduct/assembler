@@ -48,7 +48,7 @@
   "devDependencies": {
     "@reduct/build-tools": "^1.0.2",
     "chai": "^3.2.0",
-    "jsdom": ">= 0.1.23 < 4.0.0"
+    "jsdom": "^5.6.1"
   },
   "reduct": {
     "sourceFolder": "Src/",
