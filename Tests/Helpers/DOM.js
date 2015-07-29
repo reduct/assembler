@@ -1,15 +1,14 @@
 /* @reduct/assembler x.x.x | @license MIT */
 
-import jsdom from 'jsdom';
+var jsdom = require('jsdom');
+var mock = '<html><head></head><body></body></html>';
 
-let mock = '<html><head></head><body></body></html>';
-
-export default {
+module.exports = {
     defaultMock: mock,
 
-    create (mock, callback) {
+    create: function (mock, callback) {
         jsdom.env(mock, {
-            done (err, window) {
+            done: function(err, window) {
                 global.window = window;
                 global.document = window.document;
 
