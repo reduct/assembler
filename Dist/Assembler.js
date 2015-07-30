@@ -46,14 +46,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
      * app.register(MyComponent);
      * app.register(YetAnotherComponent)
      *
-     * app.boot();
+     * app.run();
      *
      *
      */
 
-    var _Assembler = (function () {
-        function _Assembler() {
-            _classCallCheck(this, _Assembler);
+    var Assembler = (function () {
+        function Assembler() {
+            _classCallCheck(this, Assembler);
 
             this.marker = 'component';
             this.selector = "data-" + this.marker;
@@ -62,7 +62,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.components = {};
         }
 
-        _createClass(_Assembler, [{
+        _createClass(Assembler, [{
             key: "instantiate",
             value: function instantiate(element) {
                 var name = element.getAttribute(this.selector);
@@ -86,11 +86,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this.index[name] = ComponentClass;
             }
         }, {
-            key: "boot",
-            value: function boot() {
+            key: "run",
+            value: function run() {
                 var _this = this;
 
-                console.log(this.selector);
                 var elements = [].slice.call(document.querySelectorAll("[" + this.selector + "]"));
                 var names = Object.keys(this.index);
 
@@ -106,33 +105,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
         }]);
 
-        return _Assembler;
+        return Assembler;
     })();
 
-    return {
-        Assembler: function Assembler() {
-            var assembler = new _Assembler();
+    var assembler = function assembler() {
+        var assembler = new Assembler();
 
-            var api = {
-                register: function register(ComponentClass) {
-                    return assembler.register(ComponentClass);
-                },
-                boot: function boot() {
-                    return assembler.boot();
-                }
-            };
-
-            //
-            // Expose additional attributes for assertions.
-            //
-            if (process && process.title && !! ~process.title.indexOf('reduct')) {
-                api.index = assembler.index;
-                api.components = assembler.components;
+        var api = {
+            register: function register(ComponentClass) {
+                return assembler.register(ComponentClass);
+            },
+            run: function run() {
+                return assembler.run();
             }
+        };
 
-            return api;
-        },
+        //
+        // Expose additional attributes for assertions.
+        //
+        if (process && process.title && !! ~process.title.indexOf('reduct')) {
+            api.index = assembler.index;
+            api.components = assembler.components;
+        }
 
-        version: version
+        return api;
     };
+
+    assembler.version = version;
+
+    return assembler;
 });

@@ -61,26 +61,26 @@ function factory (global, version) {
         }
     }
 
-    return {
-        Assembler: () => {
-            let assembler = new Assembler();
+    let assembler = () => {
+        let assembler = new Assembler();
 
-            let api = {
-                register: (ComponentClass) => assembler.register(ComponentClass),
-                run: () => assembler.run()
-            };
+        let api = {
+            register: (ComponentClass) => assembler.register(ComponentClass),
+            run: () => assembler.run()
+        };
 
-            //
-            // Expose additional attributes for assertions.
-            //
-            if (process && process.title && !!~process.title.indexOf('reduct')) {
-                api.index = assembler.index;
-                api.components = assembler.components;
-            }
+        //
+        // Expose additional attributes for assertions.
+        //
+        if (process && process.title && !!~process.title.indexOf('reduct')) {
+            api.index = assembler.index;
+            api.components = assembler.components;
+        }
 
-            return api;
-        },
+        return api;
+    }
 
-        version: version
-    };
+    assembler.version = version;
+
+    return assembler;
 }

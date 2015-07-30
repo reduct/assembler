@@ -6,21 +6,21 @@ var DOM = require('./Helpers/DOM');
 
 var expect = chai.expect;
 
-describe('The "Assembler"', function() {
+describe('The "Assembler"', function suite () {
     var mock = '' +
         '<html>' +
             '<head></head>' +
             '<body>' +
-                '<div data-component="MyComponent"></div>' *
+                '<div data-component="MyComponent"></div>' +
             '</body>' +
         '</html>';
 
-    beforeEach(function(done) {
+    beforeEach(function before (done) {
         return DOM.create(mock, done);
     });
 
-    it('should be able to create an app', function(done) {
-        var app = assembler.Assembler();
+    it('should be able to create an app', function test (done) {
+        var app = assembler();
 
         expect(app.register).to.be.a('function');
         expect(app.run).to.be.a('function');
@@ -28,11 +28,10 @@ describe('The "Assembler"', function() {
         done();
     });
 
-    it('should be able to register component instances', function(done) {
-        var app = assembler.Assembler();
+    it('should be able to register component instances', function test (done) {
+        var app = assembler();
 
-        function MyComponent() {
-        }
+        function MyComponent () {}
 
         app.register(MyComponent);
 
@@ -42,8 +41,8 @@ describe('The "Assembler"', function() {
         done();
     });
 
-    it('should be able to instantiate components', function(done) {
-        var app = assembler.Assembler();
+    it('should be able to instantiate components', function test (done) {
+        var app = assembler();
         var components;
 
         function MyComponent () {
