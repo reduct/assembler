@@ -46,9 +46,7 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "@reduct/build-tools": "^1.0.2",
-    "chai": "^3.2.0",
-    "jsdom": "^5.6.1"
+    "@reduct/build-tools": "^1.1.0"
   },
   "reduct": {
     "sourceFolder": "Src/",

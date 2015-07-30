@@ -1,6 +1,6 @@
 /* @reduct/assembler x.x.x | @license MIT */
 
-var jsdom = require('jsdom');
+var jsdom = require('@reduct/build-tools').jsdom;
 var mock = '<html><head></head><body></body></html>';
 
 module.exports = {

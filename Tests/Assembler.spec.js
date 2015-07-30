@@ -1,6 +1,6 @@
 /* @reduct/assembler x.x.x | @license MIT */
 
-var chai = require('chai');
+var chai = require('@reduct/build-tools').chai;
 var assembler = require('./../Dist/Assembler.js');
 var DOM = require('./Helpers/DOM');
 
