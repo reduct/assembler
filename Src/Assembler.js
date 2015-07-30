@@ -78,7 +78,7 @@ function factory (global, version) {
         }
 
         return api;
-    }
+    };
 
     assembler.version = version;
 
