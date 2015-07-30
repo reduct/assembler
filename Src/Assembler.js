@@ -11,14 +11,14 @@ function factory (global, version) {
      * app.register(MyComponent);
      * app.register(YetAnotherComponent)
      *
-     * app.boot();
+     * app.run();
      *
      *
      */
 
     class Assembler {
 
-        constructor() {
+        constructor () {
             this.marker = 'component';
             this.selector = `data-${this.marker}`;
 
@@ -26,7 +26,7 @@ function factory (global, version) {
             this.components = {};
         }
 
-        instantiate(element) {
+        instantiate (element) {
             let name = element.getAttribute(this.selector);
 
             let components = this.components[name] = [].slice.call(this.components[name] || []);
@@ -35,7 +35,7 @@ function factory (global, version) {
             components.unshift(new Component(element));
         }
 
-        register(ComponentClass) {
+        register (ComponentClass) {
             let type = typeof ComponentClass;
 
             if (type !== 'function') {
@@ -47,8 +47,7 @@ function factory (global, version) {
             this.index[name] = ComponentClass;
         }
 
-        boot() {
-            console.log(this.selector);
+        run () {
             let elements = [].slice.call(document.querySelectorAll(`[${this.selector}]`));
             let names = Object.keys(this.index);
 
@@ -68,7 +67,7 @@ function factory (global, version) {
 
             let api = {
                 register: (ComponentClass) => assembler.register(ComponentClass),
-                boot: () => assembler.boot()
+                run: () => assembler.run()
             };
 
             //

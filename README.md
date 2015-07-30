@@ -44,7 +44,7 @@ let app = assembler();
 app.register(MyComponent);
 app.register(YetAnotherComponent)
 
-app.boot();
+app.run();
 ```
 
 ### Options

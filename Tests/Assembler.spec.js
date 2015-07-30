@@ -23,7 +23,7 @@ describe('The "Assembler"', function() {
         var app = assembler.Assembler();
 
         expect(app.register).to.be.a('function');
-        expect(app.boot).to.be.a('function');
+        expect(app.run).to.be.a('function');
 
         done();
     });
@@ -51,7 +51,7 @@ describe('The "Assembler"', function() {
         }
 
         app.register(MyComponent);
-        app.boot();
+        app.run();
 
         components = app.components[MyComponent.name];
 
