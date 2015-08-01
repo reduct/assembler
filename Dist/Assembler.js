@@ -86,9 +86,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 this.index[name] = ComponentClass;
             }
         }, {
+            key: "registerAll",
+            value: function registerAll(classMap) {
+                var _this = this;
+
+                Object.keys(classMap).forEach(function (name) {
+                    return _this.register(classMap[name], name);
+                });
+            }
+        }, {
             key: "run",
             value: function run() {
-                var _this = this;
+                var _this2 = this;
 
                 var elements = [].slice.call(document.querySelectorAll("[" + this.selector + "]"));
                 var names = Object.keys(this.index);
@@ -98,9 +107,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 // Note: `getAttribute` has to be used due to: https://github.com/tmpvar/jsdom/issues/961
                 //
                 elements.filter(function (element) {
-                    return !! ~names.indexOf(element.getAttribute(_this.selector));
+                    return !! ~names.indexOf(element.getAttribute(_this2.selector));
                 }).forEach(function (element) {
-                    return _this.instantiate(element);
+                    return _this2.instantiate(element);
                 });
             }
         }]);
@@ -114,6 +123,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var api = {
             register: function register(ComponentClass, name) {
                 return assembler.register(ComponentClass, name);
+            },
+            registerAll: function registerAll(classMap) {
+                return assembler.registerAll(classMap);
             },
             run: function run() {
                 return assembler.run();

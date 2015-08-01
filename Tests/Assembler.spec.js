@@ -56,6 +56,24 @@ describe('The "Assembler"', function suite () {
         done();
     });
 
+    it('should be able to register a bunch of components at once', function test (done) {
+        var app = assembler();
+
+        function ComponentOne () {}
+        function ComponentTwo () {}
+
+        app.registerAll({
+            ComponentOne: ComponentOne,
+            'ComponentFoo': ComponentTwo
+        });
+
+        expect(Object.keys(app.index).length).to.equal(2);
+        expect(Object.keys(app.index)[0]).to.equal('ComponentOne');
+        expect(Object.keys(app.index)[1]).to.equal('ComponentFoo');
+
+        done();
+    });
+
     it('should be able to instantiate components', function test (done) {
         var app = assembler();
         var components;

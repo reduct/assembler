@@ -47,6 +47,10 @@ function factory (global, version) {
             this.index[name] = ComponentClass;
         }
 
+        registerAll (classMap) {
+            Object.keys(classMap).forEach((name) => this.register(classMap[name], name));
+        }
+
         run () {
             let elements = [].slice.call(document.querySelectorAll(`[${this.selector}]`));
             let names = Object.keys(this.index);
@@ -66,6 +70,7 @@ function factory (global, version) {
 
         let api = {
             register: (ComponentClass, name) => assembler.register(ComponentClass, name),
+            registerAll: (classMap) => assembler.registerAll(classMap),
             run: () => assembler.run()
         };
 
