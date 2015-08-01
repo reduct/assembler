@@ -35,14 +35,14 @@ function factory (global, version) {
             components.unshift(new Component(element));
         }
 
-        register (ComponentClass) {
+        register (ComponentClass, name) {
             let type = typeof ComponentClass;
 
             if (type !== 'function') {
                 throw new Error(`'${type}' is not a valid component class.`);
             }
 
-            let name = ComponentClass.name;
+            name = name || ComponentClass.name;
 
             this.index[name] = ComponentClass;
         }
@@ -65,7 +65,7 @@ function factory (global, version) {
         let assembler = new Assembler();
 
         let api = {
-            register: (ComponentClass) => assembler.register(ComponentClass),
+            register: (ComponentClass, name) => assembler.register(ComponentClass, name),
             run: () => assembler.run()
         };
 

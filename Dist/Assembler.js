@@ -74,14 +74,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
         }, {
             key: "register",
-            value: function register(ComponentClass) {
+            value: function register(ComponentClass, name) {
                 var type = typeof ComponentClass;
 
                 if (type !== 'function') {
                     throw new Error("'" + type + "' is not a valid component class.");
                 }
 
-                var name = ComponentClass.name;
+                name = name || ComponentClass.name;
 
                 this.index[name] = ComponentClass;
             }
@@ -112,8 +112,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var assembler = new Assembler();
 
         var api = {
-            register: function register(ComponentClass) {
-                return assembler.register(ComponentClass);
+            register: function register(ComponentClass, name) {
+                return assembler.register(ComponentClass, name);
             },
             run: function run() {
                 return assembler.run();

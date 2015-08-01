@@ -8,6 +8,7 @@ var expect = chai.expect;
 
 describe('The "Assembler"', function suite () {
     var mock = '' +
+        '<!doctype html>' +
         '<html>' +
             '<head></head>' +
             '<body>' +
@@ -37,6 +38,20 @@ describe('The "Assembler"', function suite () {
 
         expect(Object.keys(app.index).length).to.equal(1);
         expect(Object.keys(app.index)[0]).to.equal(MyComponent.name);
+
+        done();
+    });
+
+    it('should be able to register component instances with different names', function test (done) {
+        var app = assembler();
+        var name = 'FooComponent';
+
+        function MyComponent () {};
+
+        app.register(MyComponent, name);
+
+        expect(Object.keys(app.index).length).to.equal(1);
+        expect(Object.keys(app.index)[0]).to.equal(name);
 
         done();
     });
