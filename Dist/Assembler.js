@@ -1,4 +1,4 @@
-/* @reduct/assembler 1.0.0 | @license MIT */
+/* @reduct/assembler 1.0.0 | @license undefined */
 
 "use strict";
 
@@ -12,26 +12,26 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         minor: 0,
         patch: 0
     };
-    var global;
+    var world;
 
     if (typeof window !== "undefined") {
-        global = window;
+        world = window;
     } else if (typeof global !== "undefined") {
-        global = global;
+        world = global;
     } else if (typeof self !== "undefined") {
-        global = self;
+        world = self;
     } else {
-        global = this;
+        world = this;
     }
 
     if (typeof exports === "object" && typeof module !== "undefined") {
-        module.exports = factory(global, version);
+        module.exports = factory(world, version);
     } else if (typeof define === "function" && define.amd) {
         define([], function () {
-            return factory(global, version);
+            return factory(world, version);
         });
     } else {
-        global.reduct.assembler = factory(global, version);
+        world.reductAssembler = factory(world, version);
     }
 })( /**
     *
@@ -222,9 +222,12 @@ function factory(global, version) {
         };
 
         //
-        // Expose additional attributes for the tests.
+        // Expose additional attributes for
+        // the tests after checking if in Node.js land.
         //
-        if (process && process.title && !! ~process.title.indexOf('reduct')) {
+        var testing = !! ~(global.process || { title: '' }).title.indexOf('reduct');
+
+        if (testing) {
             api.index = assembler.index;
             api.components = assembler.components;
         }

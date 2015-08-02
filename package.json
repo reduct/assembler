@@ -38,10 +38,7 @@
       "url": "https://github.com/grebaldi"
     }
   ],
-  "license": {
-    "type": "MIT",
-    "url": "http://www.opensource.org/licenses/mit-license.php"
-  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/reduct/assembler/issues"
   },
@@ -53,7 +50,7 @@
     "sourceFolder": "Src/",
     "distributionFolder": "Dist/",
     "entryFile": "Assembler.js",
-    "globalPackageName": "reduct.assembler",
+    "globalPackageName": "reductAssembler",
     "coverageReportFile": "lcov.info"
   }
 }

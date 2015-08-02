@@ -156,9 +156,12 @@ function factory (global, version) {
         };
 
         //
-        // Expose additional attributes for the tests.
+        // Expose additional attributes for
+        // the tests after checking if in Node.js land.
         //
-        if (process && process.title && !!~process.title.indexOf('reduct')) {
+        let testing = !!~(global.process || {title:''}).title.indexOf('reduct');
+
+        if (testing) {
             api.index = assembler.index;
             api.components = assembler.components;
         }
