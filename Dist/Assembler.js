@@ -1,4 +1,4 @@
-/* @reduct/assembler 0.1.2 | @license MIT */
+/* @reduct/assembler 1.0.0 | @license MIT */
 
 "use strict";
 
@@ -8,9 +8,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 (function (factory) {
     var version = {
-        major: 0,
-        minor: 1,
-        patch: 2
+        major: 1,
+        minor: 0,
+        patch: 0
     };
     var global;
 
@@ -31,7 +31,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return factory(global, version);
         });
     } else {
-        global.reductAssembler = factory(global, version);
+        global.reduct.assembler = factory(global, version);
     }
 })( /**
     *

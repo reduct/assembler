@@ -1,7 +1,7 @@
 # @reduct/assembler
 [![Build Status](https://travis-ci.org/reduct/assembler.svg)](https://travis-ci.org/reduct/assembler) [![Dependency Status](https://david-dm.org/reduct/assembler.svg)](https://david-dm.org/reduct/assembler) [![devDependency Status](https://david-dm.org/reduct/assembler/dev-status.svg)](https://david-dm.org/reduct/assembler#info=devDependencies) [![Code Climate](https://codeclimate.com/github/reduct/assembler/badges/gpa.svg)](https://codeclimate.com/github/reduct/assembler) [![Test Coverage](https://codeclimate.com/github/reduct/assembler/badges/coverage.svg)](https://codeclimate.com/github/reduct/assembler/coverage)
 
-> Parses a DOM Node for tags and executes the matching Constructor on each element. This module embraces the practice of a 'Single Point of Entry'-Application(SPE).
+> Parses a DOM Node for tags and executes the matching constructor on each element. This module embraces the practice of a 'Single Point of Entry'-Application(SPE).
 
 ## Why?
 Using a single point of entry reduces code and promotes maintainability. Instead of writing the following accross all of your sites/apps components:
@@ -16,7 +16,6 @@ $('.myAwesomeApp').each(function(index, node) {
 
 TL;DR: Use an assembler, to reduce duplicate code, enhance performance and reduce the dependence of selectors in your JS.
 
-
 ## Install
 With npm, use the familiar syntax e.g.:
 ```shell
@@ -28,13 +27,14 @@ once the Assembler package is installed, just require it in the main application
 var assembler = require('@reduct/assembler');
 ```
 
-This package also supports AMD/RequireJS, it is defined as `reductAssembler`. Aren't using AMD/CommonJS? Just grab a [release](https://github.com/reduct/assembler/releases), include the `Dist/Assembler.min.js` and access the loader via the following global:
+This package also supports AMD/RequireJS, it is defined as `reduct.assembler`. Aren't using AMD/CommonJS? Just grab a [release](https://github.com/reduct/assembler/releases), include the `Dist/Assembler.min.js` and access the loader via the following global:
 ```js
-var Assembler = window.reductAssembler;
+var assembler = window.reduct.assembler;
 ```
 
 ### Configuration
 In the main application file, create a new instance of the Constructor e.g.:
+
 ```js
 import MyComponent from 'MyComponent';
 import YetAnotherComponent from 'YetAnotherComponent';
@@ -47,13 +47,76 @@ app.register(YetAnotherComponent)
 app.run();
 ```
 
-### Options
+In your HTML:
 
-**To be ported**
+```html
+<div data-component="MyComponent"></div>
+<div data-component="YetAnotherComponent"></div>
+```
+
+## API
+
+### Factory
+
+The factory creates a new instance of the assembler, called `app`.
+
+```js
+import assembler from 'assembler';
+
+let app = assembler();
+```
+
+### register(Class[, name])
+
+Registers a given component. You can define an optional name in order to overwrite the component's name.
+
+```js
+import MyComponent from 'my-component';
+import AnotherComponent from 'another-component';
+
+app.register(MyComponent);
+app.register(AnotherComponent, 'FooComponent');
+```
+
+Your HTML would look like
+
+```html
+<div data-component="MyComponent"></div>
+<div data-component="FooComponent"></div>
+```
+
+### registerAll(classMap)
+
+Registers a bunch of components at once.
+
+```js
+import MyComponent from 'my-component';
+import AnotherComponent from 'another-component';
+
+app.registerAll({
+    MyComponent: MyComponent,
+    FooComponent: AnotherComponent
+});
+```
+
+The corresponding HTML:
+
+```html
+<div data-component="MyComponent"></div>
+<div data-component="FooComponent"></div>
+```
+
+You can shorten this statement if you're using ES2015 and do not want to rename the component classes:
+
+```js
+import MyComponent from 'my-component';
+import AnotherComponent from 'another-component';
+
+app.registerAll({MyComponent, AnotherComponent});
+```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
-
 
 ## License
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
