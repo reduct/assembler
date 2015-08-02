@@ -1,23 +1,50 @@
+/**
+ *
+ * @reduct/assembler
+ * @version 0.1.2
+ * @license MIT
+ *
+ * @author Tyll Weiß <inkdpixels@gmail.com>
+ * @author André König <andre.koenig@posteo.de>
+ * @author Wilhelm Behncke <https://github.com/grebaldi>
+ *
+ */
 function factory (global, version) {
 
     /**
-     * DRAFT
+     * The Assembler.
      *
-     * import MyComponent from 'MyComponent';
-     * import YetAnotherComponent from 'YetAnotherComponent';
+     * An assembler instance acts as the central point of your
+     * application. It is responsible for connecting DOM nodes with
+     * actual component instances through exposed interfaces. Those
+     * interfaces provides the functionality for registering component
+     * classes and bootstrapping the whole application.
      *
-     * let app = assembler();
+     * Usage example:
      *
-     * app.register(MyComponent);
-     * app.register(YetAnotherComponent)
+     *     import assembler from 'assembler';
      *
-     * app.run();
+     *     // Importing your actual components
+     *     import MyComponent from 'my-component';
+     *     import AnotherComponent from 'another-component';
      *
+     *     const app = assembler();
+     *
+     *     app.register(MyComponent);
+     *     app.register(AnotherComponent, 'NewsComponent');
+     *
+     *     // Start the application (will parse the DOM and mount the
+     *     // component instances).
+     *     app.run();
      *
      */
-
     class Assembler {
 
+        /**
+         * Initializes the empty component class index
+         * and the actual component instance cache.
+         *
+         */
         constructor () {
             this.marker = 'component';
             this.selector = `data-${this.marker}`;
@@ -26,6 +53,18 @@ function factory (global, version) {
             this.components = {};
         }
 
+        /**
+         * @private
+         *
+         * Instantiates a component by a given DOM node.
+         *
+         * Will extract the component's name out of the DOM nodes `data`
+         * attribute, instantiates the actual component object and pushs
+         * this instance to the internal `components` index.
+         *
+         * @param {DOMNode} element The component's root DOM node.
+         *
+         */
         instantiate (element) {
             let name = element.getAttribute(this.selector);
 
@@ -35,6 +74,19 @@ function factory (global, version) {
             components.unshift(new Component(element));
         }
 
+        /**
+         * Registers a component class.
+         *
+         * Usage example
+         *
+         *     app.register(MyComponent); // Name: 'MyComponent'
+         *
+         *     app.register(MyComponent, 'FooComponent'); // Name: 'FooComponent'
+         *
+         * @param {Function} ComponentClass The component class which should be registered.
+         * @param {string} name An alternative name (optional)
+         *
+         */
         register (ComponentClass, name) {
             let type = typeof ComponentClass;
 
@@ -47,16 +99,38 @@ function factory (global, version) {
             this.index[name] = ComponentClass;
         }
 
+        /**
+         * Taskes a hashmap with multiple component classes
+         * and registers them at once.
+         *
+         * Usage example:
+         *
+         *     app.registerAll({
+         *         MyComponent: MyComponent,        // name: 'MyComponent'
+         *         'AnotherComponent': FooComponent // name: 'AnotherComponent'
+         *     });
+         *
+         *     // With destructuring
+         *     app.registerAll({MyComponent, FooComponent});
+         *
+         * @param {object} classMap A map with multiple component classes.
+         *
+         */
         registerAll (classMap) {
             Object.keys(classMap).forEach((name) => this.register(classMap[name], name));
         }
 
+        /**
+         * "Parse" the DOM for component declarations and
+         * instantiate the actual, well, components.
+         *
+         */
         run () {
             let elements = [].slice.call(document.querySelectorAll(`[${this.selector}]`));
             let names = Object.keys(this.index);
 
             //
-            // Find all elements which are instantiable.
+            // Find all instantiable elements.
             // Note: `getAttribute` has to be used due to: https://github.com/tmpvar/jsdom/issues/961
             //
             elements
@@ -65,9 +139,16 @@ function factory (global, version) {
         }
     }
 
+    //
+    // Create the `assembler` factory function.
+    // This factory will create a new instance of the `assembler` and exposes the API
+    //
     let assembler = () => {
         let assembler = new Assembler();
 
+        //
+        // Shard the actual front-facing API (for not leaking private methods and properties).
+        //
         let api = {
             register: (ComponentClass, name) => assembler.register(ComponentClass, name),
             registerAll: (classMap) => assembler.registerAll(classMap),
@@ -75,7 +156,7 @@ function factory (global, version) {
         };
 
         //
-        // Expose additional attributes for assertions.
+        // Expose additional attributes for the tests.
         //
         if (process && process.title && !!~process.title.indexOf('reduct')) {
             api.index = assembler.index;
@@ -85,6 +166,9 @@ function factory (global, version) {
         return api;
     };
 
+    //
+    // Add the version information to the factory function.
+    //
     assembler.version = version;
 
     return assembler;

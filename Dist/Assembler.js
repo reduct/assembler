@@ -33,25 +33,55 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     } else {
         global.reductAssembler = factory(global, version);
     }
-})(function factory(global, version) {
+})( /**
+    *
+    * @reduct/assembler
+    * @version 0.1.2
+    * @license MIT
+    *
+    * @author Tyll Weiß <inkdpixels@gmail.com>
+    * @author André König <andre.koenig@posteo.de>
+    * @author Wilhelm Behncke <https://github.com/grebaldi>
+    *
+    */
+function factory(global, version) {
 
     /**
-     * DRAFT
+     * The Assembler.
      *
-     * import MyComponent from 'MyComponent';
-     * import YetAnotherComponent from 'YetAnotherComponent';
+     * An assembler instance acts as the central point of your
+     * application. It is responsible for connecting DOM nodes with
+     * actual component instances through exposed interfaces. Those
+     * interfaces provides the functionality for registering component
+     * classes and bootstrapping the whole application.
      *
-     * let app = assembler();
+     * Usage example:
      *
-     * app.register(MyComponent);
-     * app.register(YetAnotherComponent)
+     *     import assembler from 'assembler';
      *
-     * app.run();
+     *     // Importing your actual components
+     *     import MyComponent from 'my-component';
+     *     import AnotherComponent from 'another-component';
      *
+     *     const app = assembler();
+     *
+     *     app.register(MyComponent);
+     *     app.register(AnotherComponent, 'NewsComponent');
+     *
+     *     // Start the application (will parse the DOM and mount the
+     *     // component instances).
+     *     app.run();
      *
      */
 
     var Assembler = (function () {
+
+        /**
+         * Initializes the empty component class index
+         * and the actual component instance cache.
+         *
+         */
+
         function Assembler() {
             _classCallCheck(this, Assembler);
 
@@ -61,6 +91,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.index = {};
             this.components = {};
         }
+
+        //
+        // Create the `assembler` factory function.
+        // This factory will create a new instance of the `assembler` and exposes the API
+        //
+
+        /**
+         * @private
+         *
+         * Instantiates a component by a given DOM node.
+         *
+         * Will extract the component's name out of the DOM nodes `data`
+         * attribute, instantiates the actual component object and pushs
+         * this instance to the internal `components` index.
+         *
+         * @param {DOMNode} element The component's root DOM node.
+         *
+         */
 
         _createClass(Assembler, [{
             key: "instantiate",
@@ -72,6 +120,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 components.unshift(new Component(element));
             }
+
+            /**
+             * Registers a component class.
+             *
+             * Usage example
+             *
+             *     app.register(MyComponent); // Name: 'MyComponent'
+             *
+             *     app.register(MyComponent, 'FooComponent'); // Name: 'FooComponent'
+             *
+             * @param {Function} ComponentClass The component class which should be registered.
+             * @param {string} name An alternative name (optional)
+             *
+             */
         }, {
             key: "register",
             value: function register(ComponentClass, name) {
@@ -85,6 +147,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 this.index[name] = ComponentClass;
             }
+
+            /**
+             * Taskes a hashmap with multiple component classes
+             * and registers them at once.
+             *
+             * Usage example:
+             *
+             *     app.registerAll({
+             *         MyComponent: MyComponent,        // name: 'MyComponent'
+             *         'AnotherComponent': FooComponent // name: 'AnotherComponent'
+             *     });
+             *
+             *     // With destructuring
+             *     app.registerAll({MyComponent, FooComponent});
+             *
+             * @param {object} classMap A map with multiple component classes.
+             *
+             */
         }, {
             key: "registerAll",
             value: function registerAll(classMap) {
@@ -94,6 +174,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     return _this.register(classMap[name], name);
                 });
             }
+
+            /**
+             * "Parse" the DOM for component declarations and
+             * instantiate the actual, well, components.
+             *
+             */
         }, {
             key: "run",
             value: function run() {
@@ -103,7 +189,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 var names = Object.keys(this.index);
 
                 //
-                // Find all elements which are instantiable.
+                // Find all instantiable elements.
                 // Note: `getAttribute` has to be used due to: https://github.com/tmpvar/jsdom/issues/961
                 //
                 elements.filter(function (element) {
@@ -120,6 +206,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var assembler = function assembler() {
         var assembler = new Assembler();
 
+        //
+        // Shard the actual front-facing API (for not leaking private methods and properties).
+        //
         var api = {
             register: function register(ComponentClass, name) {
                 return assembler.register(ComponentClass, name);
@@ -133,7 +222,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         };
 
         //
-        // Expose additional attributes for assertions.
+        // Expose additional attributes for the tests.
         //
         if (process && process.title && !! ~process.title.indexOf('reduct')) {
             api.index = assembler.index;
@@ -143,6 +232,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return api;
     };
 
+    //
+    // Add the version information to the factory function.
+    //
     assembler.version = version;
 
     return assembler;
