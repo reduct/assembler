@@ -137,6 +137,8 @@ function factory(global, version) {
         }, {
             key: "register",
             value: function register(ComponentClass, name) {
+                var _this = this;
+
                 var type = typeof ComponentClass;
 
                 if (type !== 'function') {
@@ -146,6 +148,30 @@ function factory(global, version) {
                 name = name || ComponentClass.name;
 
                 this.index[name] = ComponentClass;
+
+                //
+                // DEV: HOT CODE
+                //
+                // THIS IS HOT CODE AND WILL CHANGE. THE FOLLOWING LINES ARE
+                // FOR TESTING A MECHANISM TO EMIT THE `run` method.
+                //
+                var elements = [].slice.call(document.querySelectorAll("[" + this.selector + "=" + name + "]"));
+                if (elements.length) {
+                    elements.forEach(function (element) {
+                        return _this.instantiate(element);
+                    });
+                } else {
+                    setTimeout(function () {
+                        var elements = [].slice.call(document.querySelectorAll("[" + _this.selector + "=" + name + "]"));
+
+                        elements.forEach(function (element) {
+                            return _this.instantiate(element);
+                        });
+                    }, 0);
+                }
+                //
+                // END HOT CODE
+                //
             }
 
             /**
@@ -168,10 +194,10 @@ function factory(global, version) {
         }, {
             key: "registerAll",
             value: function registerAll(classMap) {
-                var _this = this;
+                var _this2 = this;
 
                 Object.keys(classMap).forEach(function (name) {
-                    return _this.register(classMap[name], name);
+                    return _this2.register(classMap[name], name);
                 });
             }
 
@@ -183,7 +209,7 @@ function factory(global, version) {
         }, {
             key: "run",
             value: function run() {
-                var _this2 = this;
+                var _this3 = this;
 
                 var elements = [].slice.call(document.querySelectorAll("[" + this.selector + "]"));
                 var names = Object.keys(this.index);
@@ -193,9 +219,9 @@ function factory(global, version) {
                 // Note: `getAttribute` has to be used due to: https://github.com/tmpvar/jsdom/issues/961
                 //
                 elements.filter(function (element) {
-                    return !! ~names.indexOf(element.getAttribute(_this2.selector));
+                    return !! ~names.indexOf(element.getAttribute(_this3.selector));
                 }).forEach(function (element) {
-                    return _this2.instantiate(element);
+                    return _this3.instantiate(element);
                 });
             }
         }]);

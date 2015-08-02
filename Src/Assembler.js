@@ -97,6 +97,26 @@ function factory (global, version) {
             name = name || ComponentClass.name;
 
             this.index[name] = ComponentClass;
+
+            //
+            // DEV: HOT CODE
+            //
+            // THIS IS HOT CODE AND WILL CHANGE. THE FOLLOWING LINES ARE
+            // FOR TESTING A MECHANISM TO EMIT THE `run` method.
+            //
+            let elements = [].slice.call(document.querySelectorAll(`[${this.selector}=${name}]`));
+            if (elements.length) {
+                elements.forEach((element) => this.instantiate(element));
+            } else {
+                setTimeout(() => {
+                    let elements = [].slice.call(document.querySelectorAll(`[${this.selector}=${name}]`));
+
+                    elements.forEach((element) => this.instantiate(element));
+                }, 0);
+            }
+            //
+            // END HOT CODE
+            //
         }
 
         /**
