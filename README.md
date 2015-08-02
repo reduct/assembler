@@ -32,7 +32,7 @@ This package also supports AMD/RequireJS, it is defined as `reduct.assembler`. A
 var assembler = window.reduct.assembler;
 ```
 
-### Configuration
+### Usage example
 In the main application file, create a new instance of the Constructor e.g.:
 
 ```js
