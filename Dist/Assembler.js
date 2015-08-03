@@ -102,10 +102,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          * Instantiates a component by a given DOM node.
          *
          * Will extract the component's name out of the DOM nodes `data`
-         * attribute, instantiates the actual component object and pushs
-         * this instance to the internal `components` index.
+         * attribute, instantiates the actual component object and pushes
+         * the instance to the internal `components` index.
          *
-         * @param {DOMNode} element The component's root DOM node.
+         * @param {HTMLElement} element The component's root DOM node.
          *
          */
 
@@ -148,7 +148,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }
 
             /**
-             * Taskes a hashmap with multiple component classes
+             * Takes a hashmap with multiple component classes
              * and registers them at once.
              *
              * Usage example:
