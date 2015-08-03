@@ -1,14 +1,3 @@
-/**
- *
- * @reduct/assembler
- * @version 0.1.2
- * @license MIT
- *
- * @author Tyll Weiß <inkdpixels@gmail.com>
- * @author André König <andre.koenig@posteo.de>
- * @author Wilhelm Behncke <https://github.com/grebaldi>
- *
- */
 function factory (global, version) {
 
     /**

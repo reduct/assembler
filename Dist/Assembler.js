@@ -1,4 +1,14 @@
-/* @reduct/assembler 1.0.0 | @license MIT */
+/**
+ *
+ * @name @reduct/assembler
+ * @version 1.0.0
+ * @license MIT
+ *
+ * @author Tyll Weiß <inkdpixels@gmail.com>
+ * @author André König <andre.koenig@posteo.de>
+ * @author Wilhelm Behncke <undefined>
+ *
+ */
 
 "use strict";
 
@@ -12,39 +22,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         minor: 0,
         patch: 0
     };
-    var global;
+    var world;
 
     if (typeof window !== "undefined") {
-        global = window;
+        world = window;
     } else if (typeof global !== "undefined") {
-        global = global;
+        world = global;
     } else if (typeof self !== "undefined") {
-        global = self;
+        world = self;
     } else {
-        global = this;
+        world = this;
     }
 
     if (typeof exports === "object" && typeof module !== "undefined") {
-        module.exports = factory(global, version);
+        module.exports = factory(world, version);
     } else if (typeof define === "function" && define.amd) {
         define([], function () {
-            return factory(global, version);
+            return factory(world, version);
         });
     } else {
-        global.reduct.assembler = factory(global, version);
+        world.reduct.assembler = factory(world, version);
     }
-})( /**
-    *
-    * @reduct/assembler
-    * @version 0.1.2
-    * @license MIT
-    *
-    * @author Tyll Weiß <inkdpixels@gmail.com>
-    * @author André König <andre.koenig@posteo.de>
-    * @author Wilhelm Behncke <https://github.com/grebaldi>
-    *
-    */
-function factory(global, version) {
+})(function factory(global, version) {
 
     /**
      * The Assembler.
