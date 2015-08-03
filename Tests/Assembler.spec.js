@@ -1,9 +1,9 @@
 /* @reduct/assembler x.x.x | @license MIT */
 
-var chai = require('@reduct/build-tools').chai;
+var buildTools = require('@reduct/build-tools');
 var assembler = require('./../Dist/Assembler.js');
-var DOM = require('./Helpers/DOM');
-
+var chai = buildTools.chai;
+var DOM = buildTools.mock;
 var expect = chai.expect;
 
 describe('The "Assembler"', function suite () {
