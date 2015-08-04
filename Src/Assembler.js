@@ -1,145 +1,164 @@
-/* @reduct/assembler 0.1.2 | @license MIT */
+function factory (global, version) {
 
-(function(global, factory) {
-    'use strict';
-
-    // If the env is browserify, export the factory using the module object.
-    if (typeof module === "object" && typeof module.exports === "object") {
-        module.exports = factory(global);
-
-    // If the env is AMD, register the Module as 'ComponentDomParser'.
-    } else if (global.define && typeof global.define === "function" && global.define.amd) {
-        global.define("reductAssembler", [], function() {
-            return factory(global);
-        });
-
-    // If the env is a browser(without CJS or AMD support), export the factory into the global window object.
-    } else {
-        global.reductAssembler = factory(global);
-    }
-}(window, function(global) {
-    'use strict';
-
-    const doc = global.document;
-
-    /*
-     * Assembler
-     * @param options {Object} The options Object which initializes the parser.
-     * @example
-     * // Initialize a new instance of the ComponentDomParser.
-     * var parser = new window.reductAssembler({
-     *     dataSelector: 'app',
-     *     componentIndex: {
-     *         'myApplication': function(el) { el.innerHTML = 'myApplication initialized!' }
-     *     },
-     *     componentDidMountCallback: function(instance) {
-     *         console.log(instance);
-     *     }
-     * });
+    /**
+     * The Assembler.
      *
-     * // Parse the document for all [data-app] nodes.
-     * parser.parse();
-     * @constructor
+     * An assembler instance acts as the central point of your
+     * application. It is responsible for connecting DOM nodes with
+     * actual component instances through exposed interfaces. Those
+     * interfaces provides the functionality for registering component
+     * classes and bootstrapping the whole application.
+     *
+     * Usage example:
+     *
+     *     import assembler from 'assembler';
+     *
+     *     // Importing your actual components
+     *     import MyComponent from 'my-component';
+     *     import AnotherComponent from 'another-component';
+     *
+     *     const app = assembler();
+     *
+     *     app.register(MyComponent);
+     *     app.register(AnotherComponent, 'NewsComponent');
+     *
+     *     // Start the application (will parse the DOM and mount the
+     *     // component instances).
+     *     app.run();
+     *
      */
-    let Assembler = function(options) {
-        this._checkForRequiredConstants(options);
+    class Assembler {
 
-        this.dataSelector = options.dataSelector;
-        this.componentIndex = options.componentIndex;
-        this.componentDidMountCallback = options.componentDidMountCallback;
-        this.nonIndexedComponentPolicies = options.nonIndexedComponentPolicies || null;
-        this._isLoggingEnabled = false || options.isLoggingEnabled;
-        this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
-        this._policyRulesRegex = this._policyRules ? this._policyRules.map(function(policyRule) {
-            return new RegExp('^' + policyRule.replace(/[^\w\s]/g, '\$&').replace(/\*/g, '\\w+.*') + '$');
-        }) : null;
-        this._mountedElementsCache = [];
-    };
+        /**
+         * Initializes the empty component class index
+         * and the actual component instance cache.
+         *
+         */
+        constructor () {
+            this.marker = 'component';
+            this.selector = `data-${this.marker}`;
 
-    Assembler.prototype._checkForRequiredConstants = function(options) {
-        if(!options) {
-            throw new Error('@reduct/assembler Error: No option object was specified.');
+            this.index = {};
+            this.components = {};
         }
 
-        if(!options.dataSelector) {
-            throw new Error('@reduct/assembler Error: No dataSelector was specified.');
+        /**
+         * @private
+         *
+         * Instantiates a component by a given DOM node.
+         *
+         * Will extract the component's name out of the DOM nodes `data`
+         * attribute, instantiates the actual component object and pushes
+         * the instance to the internal `components` index.
+         *
+         * @param {HTMLElement} element The component's root DOM node.
+         *
+         */
+        instantiate (element) {
+            let name = element.getAttribute(this.selector);
+
+            let components = this.components[name] = [].slice.call(this.components[name] || []);
+            let Component = this.index[name];
+
+            components.unshift(new Component(element));
         }
 
-        if(!options.componentIndex) {
-            throw new Error('@reduct/assembler Error: No componentIndex was specified.');
-        }
+        /**
+         * Registers a component class.
+         *
+         * Usage example
+         *
+         *     app.register(MyComponent); // Name: 'MyComponent'
+         *
+         *     app.register(MyComponent, 'FooComponent'); // Name: 'FooComponent'
+         *
+         * @param {Function} ComponentClass The component class which should be registered.
+         * @param {string} name An alternative name (optional)
+         *
+         */
+        register (ComponentClass, name) {
+            let type = typeof ComponentClass;
 
-        if(options.componentDidMountCallback && typeof(options.componentDidMountCallback) !== 'function') {
-            throw new Error('@reduct/assembler Error: The componentDidMountCallback option must be a function.');
-        }
-    };
-
-    Assembler.prototype.parse = function(contextElement) {
-        contextElement = contextElement || doc.body;
-
-        let elementNodeList = contextElement.querySelectorAll('[data-' + this.dataSelector + ']');
-        let elementNodes = Array.prototype.slice.call(elementNodeList,0);
-        let self = this;
-
-        elementNodes.forEach(function(node) {
-            let componentKey = node.dataset[self.dataSelector];
-            let Component = self.componentIndex[componentKey];
-            let FallBackComponent =  self._getNonIndexComponentPolicy(node, componentKey);
-
-            if(Component) {
-                if(self._mountedElementsCache.indexOf(node) < 0) {
-                    self._mountComponent(node, Component);
-                }
-            } else if(FallBackComponent) {
-                self._mountComponent(node, FallBackComponent);
-            } else if(self._isLoggingEnabled) {
-                console.info('Assembler Info: Component "' + componentKey + '" isn`t present in the passed componentIndex while mounting a node.', self.componentIndex, node);
+            if (type !== 'function') {
+                throw new Error(`'${type}' is not a valid component class.`);
             }
-        });
 
-        return this;
-    };
+            name = name || ComponentClass.name;
 
-    Assembler.prototype._mountComponent = function(node, Component) {
-        let instance = new Component(node);
-
-        this._mountedElementsCache.push(node);
-
-        if(this.componentDidMountCallback) {
-            this.componentDidMountCallback(instance);
+            this.index[name] = ComponentClass;
         }
 
-        return instance;
-    };
-
-    Assembler.prototype._getNonIndexComponentPolicy = function(node, componentKey) {
-        let nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
-
-        if (nonIndexedComponentPolicies) {
-            let policyRule = null;
-            let policyRuleRegex = null;
-
-            for (let i = 0; (policyRule = this._policyRules[i]) && (policyRuleRegex = this._policyRulesRegex[i]); i++) {
-                if (componentKey.match(policyRuleRegex)) {
-                    let policyHandler = nonIndexedComponentPolicies[policyRule];
-                    let policyConstructor = policyHandler(componentKey, node);
-
-                    if (policyConstructor) {
-                        return policyConstructor;
-                    }
-                }
-            }
+        /**
+         * Takes a hashmap with multiple component classes
+         * and registers them at once.
+         *
+         * Usage example:
+         *
+         *     app.registerAll({
+         *         MyComponent: MyComponent,        // name: 'MyComponent'
+         *         'AnotherComponent': FooComponent // name: 'AnotherComponent'
+         *     });
+         *
+         *     // With destructuring
+         *     app.registerAll({MyComponent, FooComponent});
+         *
+         * @param {object} classMap A map with multiple component classes.
+         *
+         */
+        registerAll (classMap) {
+            Object.keys(classMap).forEach((name) => this.register(classMap[name], name));
         }
 
-        return false;
+        /**
+         * "Parse" the DOM for component declarations and
+         * instantiate the actual, well, components.
+         *
+         */
+        run () {
+            let elements = [].slice.call(document.querySelectorAll(`[${this.selector}]`));
+            let names = Object.keys(this.index);
+
+            //
+            // Find all instantiable elements.
+            // Note: `getAttribute` has to be used due to: https://github.com/tmpvar/jsdom/issues/961
+            //
+            elements
+                .filter((element) => !!~names.indexOf(element.getAttribute(this.selector)))
+                .forEach((element) => this.instantiate(element));
+        }
+    }
+
+    //
+    // Create the `assembler` factory function.
+    // This factory will create a new instance of the `assembler` and exposes the API
+    //
+    let assembler = () => {
+        let assembler = new Assembler();
+
+        //
+        // Shard the actual front-facing API (for not leaking private methods and properties).
+        //
+        let api = {
+            register: (ComponentClass, name) => assembler.register(ComponentClass, name),
+            registerAll: (classMap) => assembler.registerAll(classMap),
+            run: () => assembler.run()
+        };
+
+        //
+        // Expose additional attributes for the tests.
+        //
+        if (process && process.title && !!~process.title.indexOf('reduct')) {
+            api.index = assembler.index;
+            api.components = assembler.components;
+        }
+
+        return api;
     };
 
+    //
+    // Add the version information to the factory function.
+    //
+    assembler.version = version;
 
-    Assembler.prototype.addComponent = function(componentKey, Component) {
-        this.componentIndex[componentKey] = Component;
-
-        return this;
-    };
-
-    return Assembler;
-}));
+    return assembler;
+}

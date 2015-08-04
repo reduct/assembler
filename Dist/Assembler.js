@@ -1,145 +1,240 @@
-/* @reduct/assembler 0.1.2 | @license MIT */
+/**
+ *
+ * @name @reduct/assembler
+ * @version 1.0.0
+ * @license MIT
+ *
+ * @author Tyll Weiß <inkdpixels@gmail.com>
+ * @author André König <andre.koenig@posteo.de>
+ * @author Wilhelm Behncke
+ *
+ */
 
-(function (global, factory) {
-    "use strict";
+"use strict";
 
-    // If the env is browserify, export the factory using the module object.
-    if (typeof module === "object" && typeof module.exports === "object") {
-        module.exports = factory(global);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-        // If the env is AMD, register the Module as 'ComponentDomParser'.
-    } else if (global.define && typeof global.define === "function" && global.define.amd) {
-        global.define("reductAssembler", [], function () {
-            return factory(global);
-        });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-        // If the env is a browser(without CJS or AMD support), export the factory into the global window object.
+(function (factory) {
+    var version = {
+        major: 1,
+        minor: 0,
+        patch: 0
+    };
+    var world;
+
+    if (typeof window !== "undefined") {
+        world = window;
+    } else if (typeof global !== "undefined") {
+        world = global;
+    } else if (typeof self !== "undefined") {
+        world = self;
     } else {
-        global.reductAssembler = factory(global);
+        world = this;
     }
-})(window, function (global) {
-    "use strict";
 
-    var doc = global.document;
-
-    /*
-     * Assembler
-     * @param options {Object} The options Object which initializes the parser.
-     * @example
-     * // Initialize a new instance of the ComponentDomParser.
-     * var parser = new window.reductAssembler({
-     *     dataSelector: 'app',
-     *     componentIndex: {
-     *         'myApplication': function(el) { el.innerHTML = 'myApplication initialized!' }
-     *     },
-     *     componentDidMountCallback: function(instance) {
-     *         console.log(instance);
-     *     }
-     * });
-     *
-     * // Parse the document for all [data-app] nodes.
-     * parser.parse();
-     * @constructor
-     */
-    var Assembler = function (options) {
-        this._checkForRequiredConstants(options);
-
-        this.dataSelector = options.dataSelector;
-        this.componentIndex = options.componentIndex;
-        this.componentDidMountCallback = options.componentDidMountCallback;
-        this.nonIndexedComponentPolicies = options.nonIndexedComponentPolicies || null;
-        this._isLoggingEnabled = false || options.isLoggingEnabled;
-        this._policyRules = options.nonIndexedComponentPolicies ? Object.keys(options.nonIndexedComponentPolicies) : null;
-        this._policyRulesRegex = this._policyRules ? this._policyRules.map(function (policyRule) {
-            return new RegExp("^" + policyRule.replace(/[^\w\s]/g, "$&").replace(/\*/g, "\\w+.*") + "$");
-        }) : null;
-        this._mountedElementsCache = [];
-    };
-
-    Assembler.prototype._checkForRequiredConstants = function (options) {
-        if (!options) {
-            throw new Error("@reduct/assembler Error: No option object was specified.");
-        }
-
-        if (!options.dataSelector) {
-            throw new Error("@reduct/assembler Error: No dataSelector was specified.");
-        }
-
-        if (!options.componentIndex) {
-            throw new Error("@reduct/assembler Error: No componentIndex was specified.");
-        }
-
-        if (options.componentDidMountCallback && typeof options.componentDidMountCallback !== "function") {
-            throw new Error("@reduct/assembler Error: The componentDidMountCallback option must be a function.");
-        }
-    };
-
-    Assembler.prototype.parse = function (contextElement) {
-        contextElement = contextElement || doc.body;
-
-        var elementNodeList = contextElement.querySelectorAll("[data-" + this.dataSelector + "]");
-        var elementNodes = Array.prototype.slice.call(elementNodeList, 0);
-        var self = this;
-
-        elementNodes.forEach(function (node) {
-            var componentKey = node.dataset[self.dataSelector];
-            var Component = self.componentIndex[componentKey];
-            var FallBackComponent = self._getNonIndexComponentPolicy(node, componentKey);
-
-            if (Component) {
-                if (self._mountedElementsCache.indexOf(node) < 0) {
-                    self._mountComponent(node, Component);
-                }
-            } else if (FallBackComponent) {
-                self._mountComponent(node, FallBackComponent);
-            } else if (self._isLoggingEnabled) {
-                console.info("Assembler Info: Component \"" + componentKey + "\" isn`t present in the passed componentIndex while mounting a node.", self.componentIndex, node);
-            }
+    if (typeof exports === "object" && typeof module !== "undefined") {
+        module.exports = factory(world, version);
+    } else if (typeof define === "function" && define.amd) {
+        define([], function () {
+            return factory(world, version);
         });
+    } else {
+        world.reduct.assembler = factory(world, version);
+    }
+})(function factory(global, version) {
 
-        return this;
-    };
+    /**
+     * The Assembler.
+     *
+     * An assembler instance acts as the central point of your
+     * application. It is responsible for connecting DOM nodes with
+     * actual component instances through exposed interfaces. Those
+     * interfaces provides the functionality for registering component
+     * classes and bootstrapping the whole application.
+     *
+     * Usage example:
+     *
+     *     import assembler from 'assembler';
+     *
+     *     // Importing your actual components
+     *     import MyComponent from 'my-component';
+     *     import AnotherComponent from 'another-component';
+     *
+     *     const app = assembler();
+     *
+     *     app.register(MyComponent);
+     *     app.register(AnotherComponent, 'NewsComponent');
+     *
+     *     // Start the application (will parse the DOM and mount the
+     *     // component instances).
+     *     app.run();
+     *
+     */
 
-    Assembler.prototype._mountComponent = function (node, Component) {
-        var instance = new Component(node);
+    var Assembler = (function () {
 
-        this._mountedElementsCache.push(node);
+        /**
+         * Initializes the empty component class index
+         * and the actual component instance cache.
+         *
+         */
 
-        if (this.componentDidMountCallback) {
-            this.componentDidMountCallback(instance);
+        function Assembler() {
+            _classCallCheck(this, Assembler);
+
+            this.marker = 'component';
+            this.selector = "data-" + this.marker;
+
+            this.index = {};
+            this.components = {};
         }
 
-        return instance;
-    };
+        //
+        // Create the `assembler` factory function.
+        // This factory will create a new instance of the `assembler` and exposes the API
+        //
 
-    Assembler.prototype._getNonIndexComponentPolicy = function (node, componentKey) {
-        var nonIndexedComponentPolicies = this.nonIndexedComponentPolicies;
+        /**
+         * @private
+         *
+         * Instantiates a component by a given DOM node.
+         *
+         * Will extract the component's name out of the DOM nodes `data`
+         * attribute, instantiates the actual component object and pushes
+         * the instance to the internal `components` index.
+         *
+         * @param {HTMLElement} element The component's root DOM node.
+         *
+         */
 
-        if (nonIndexedComponentPolicies) {
-            var policyRule = null;
-            var policyRuleRegex = null;
+        _createClass(Assembler, [{
+            key: "instantiate",
+            value: function instantiate(element) {
+                var name = element.getAttribute(this.selector);
 
-            for (var i = 0; (policyRule = this._policyRules[i]) && (policyRuleRegex = this._policyRulesRegex[i]); i++) {
-                if (componentKey.match(policyRuleRegex)) {
-                    var policyHandler = nonIndexedComponentPolicies[policyRule];
-                    var policyConstructor = policyHandler(componentKey, node);
+                var components = this.components[name] = [].slice.call(this.components[name] || []);
+                var Component = this.index[name];
 
-                    if (policyConstructor) {
-                        return policyConstructor;
-                    }
-                }
+                components.unshift(new Component(element));
             }
+
+            /**
+             * Registers a component class.
+             *
+             * Usage example
+             *
+             *     app.register(MyComponent); // Name: 'MyComponent'
+             *
+             *     app.register(MyComponent, 'FooComponent'); // Name: 'FooComponent'
+             *
+             * @param {Function} ComponentClass The component class which should be registered.
+             * @param {string} name An alternative name (optional)
+             *
+             */
+        }, {
+            key: "register",
+            value: function register(ComponentClass, name) {
+                var type = typeof ComponentClass;
+
+                if (type !== 'function') {
+                    throw new Error("'" + type + "' is not a valid component class.");
+                }
+
+                name = name || ComponentClass.name;
+
+                this.index[name] = ComponentClass;
+            }
+
+            /**
+             * Takes a hashmap with multiple component classes
+             * and registers them at once.
+             *
+             * Usage example:
+             *
+             *     app.registerAll({
+             *         MyComponent: MyComponent,        // name: 'MyComponent'
+             *         'AnotherComponent': FooComponent // name: 'AnotherComponent'
+             *     });
+             *
+             *     // With destructuring
+             *     app.registerAll({MyComponent, FooComponent});
+             *
+             * @param {object} classMap A map with multiple component classes.
+             *
+             */
+        }, {
+            key: "registerAll",
+            value: function registerAll(classMap) {
+                var _this = this;
+
+                Object.keys(classMap).forEach(function (name) {
+                    return _this.register(classMap[name], name);
+                });
+            }
+
+            /**
+             * "Parse" the DOM for component declarations and
+             * instantiate the actual, well, components.
+             *
+             */
+        }, {
+            key: "run",
+            value: function run() {
+                var _this2 = this;
+
+                var elements = [].slice.call(document.querySelectorAll("[" + this.selector + "]"));
+                var names = Object.keys(this.index);
+
+                //
+                // Find all instantiable elements.
+                // Note: `getAttribute` has to be used due to: https://github.com/tmpvar/jsdom/issues/961
+                //
+                elements.filter(function (element) {
+                    return !! ~names.indexOf(element.getAttribute(_this2.selector));
+                }).forEach(function (element) {
+                    return _this2.instantiate(element);
+                });
+            }
+        }]);
+
+        return Assembler;
+    })();
+
+    var assembler = function assembler() {
+        var assembler = new Assembler();
+
+        //
+        // Shard the actual front-facing API (for not leaking private methods and properties).
+        //
+        var api = {
+            register: function register(ComponentClass, name) {
+                return assembler.register(ComponentClass, name);
+            },
+            registerAll: function registerAll(classMap) {
+                return assembler.registerAll(classMap);
+            },
+            run: function run() {
+                return assembler.run();
+            }
+        };
+
+        //
+        // Expose additional attributes for the tests.
+        //
+        if (process && process.title && !! ~process.title.indexOf('reduct')) {
+            api.index = assembler.index;
+            api.components = assembler.components;
         }
 
-        return false;
+        return api;
     };
 
+    //
+    // Add the version information to the factory function.
+    //
+    assembler.version = version;
 
-    Assembler.prototype.addComponent = function (componentKey, Component) {
-        this.componentIndex[componentKey] = Component;
-
-        return this;
-    };
-
-    return Assembler;
+    return assembler;
 });
