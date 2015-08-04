@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.0.0
+**Implemented enhancements:**
+- Wrapped the possibility of batch registration of components into a method.
+- Documented all methods via the discussed JSDoc subset.
+- The Components are registered automatically with their function name.
+- Abstracted the API / Move from the direct connection to 'Component'.
+- The componentIndex is not acccesible anymore.
+- Added a semver oriented version object enhancement.
+- ES2015 rewritten.
+
 ## 0.1.2
 
 **Fixed issues:**
@@ -12,7 +22,6 @@
 - Fixed the execution of the parse method.
 
 ## 0.1.0
-
 **Implemented enhancements:**
 - Added a 'addComponent()' method.
 - Added a 'isLoggingEnabled' option for the Constructor and turn of logging messages by default.
