@@ -41,7 +41,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return factory(world, version);
         });
     } else {
-        world.reduct.assembler = factory(world, version);
+        world.reductAssembler = factory(world, version);
     }
 })(function factory(global, version) {
 

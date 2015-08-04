@@ -52,7 +52,7 @@
     "sourceFolder": "Src/",
     "distributionFolder": "Dist/",
     "entryFile": "Assembler.js",
-    "globalPackageName": "reduct.assembler",
+    "globalPackageName": "reductAssembler",
     "coverageReportFile": "lcov.info"
   }
 }
