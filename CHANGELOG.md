@@ -1,4 +1,4 @@
-# Change Log
+# Changelog
 
 ## 1.0.0
 **Implemented enhancements:**
