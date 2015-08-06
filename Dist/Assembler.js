@@ -51,7 +51,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     } else {
         world.reduct.reductAssembler = factory(world, opts);
     }
-})(function factory(global, opts) {
+})(function factory(global, factoryOpts) {
 
     /**
      * The Assembler.
@@ -90,9 +90,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          */
 
         function Assembler() {
+            var opts = arguments.length <= 0 || arguments[0] === undefined ? { marker: 'component' } : arguments[0];
+
             _classCallCheck(this, Assembler);
 
-            this.marker = 'component';
+            this.marker = opts.marker;
             this.selector = "data-" + this.marker;
 
             this.index = {};
@@ -251,8 +253,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Assembler;
     })();
 
-    var assembler = function assembler() {
-        var assembler = new Assembler();
+    var assembler = function assembler(opts) {
+        var assembler = new Assembler(opts);
 
         //
         // Shard the actual front-facing API (for not leaking private methods and properties).
@@ -272,7 +274,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         //
         // Expose additional attributes for the tests.
         //
-        if (opts.isTestingEnv) {
+        if (factoryOpts.isTestingEnv) {
             api.index = assembler.index;
             api.components = assembler.components;
         }
@@ -283,7 +285,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     //
     // Add the version information to the factory function.
     //
-    assembler.version = opts.packageVersion;
+    assembler.version = factoryOpts.packageVersion;
 
     return assembler;
 });

@@ -1,4 +1,4 @@
-function factory (global, opts) {
+function factory (global, factoryOpts) {
 
     /**
      * The Assembler.
@@ -34,8 +34,8 @@ function factory (global, opts) {
          * and the actual component instance cache.
          *
          */
-        constructor () {
-            this.marker = 'component';
+        constructor (opts = { marker: 'component' }) {
+            this.marker = opts.marker;
             this.selector = `data-${this.marker}`;
 
             this.index = {};
@@ -171,8 +171,8 @@ function factory (global, opts) {
     // Create the `assembler` factory function.
     // This factory will create a new instance of the `assembler` and exposes the API
     //
-    let assembler = () => {
-        let assembler = new Assembler();
+    let assembler = (opts) => {
+        let assembler = new Assembler(opts);
 
         //
         // Shard the actual front-facing API (for not leaking private methods and properties).
@@ -186,7 +186,7 @@ function factory (global, opts) {
         //
         // Expose additional attributes for the tests.
         //
-        if (opts.isTestingEnv) {
+        if (factoryOpts.isTestingEnv) {
             api.index = assembler.index;
             api.components = assembler.components;
         }
@@ -197,7 +197,7 @@ function factory (global, opts) {
     //
     // Add the version information to the factory function.
     //
-    assembler.version = opts.packageVersion;
+    assembler.version = factoryOpts.packageVersion;
 
     return assembler;
 }

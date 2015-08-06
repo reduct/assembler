@@ -12,6 +12,7 @@ describe('The "Assembler"', function suite () {
         '<html>' +
             '<head></head>' +
             '<body>' +
+                '<div data-foo="MyComponent"></div>' +
                 '<div data-component="MyComponent"></div>' +
             '</body>' +
         '</html>';
@@ -111,6 +112,23 @@ describe('The "Assembler"', function suite () {
 
         // Should still be only one component
         expect(app.components['MyComponent'].length).to.equal(1);
+
+        done();
+    });
+
+    it('should be able to use a custom marker option.', function test (done) {
+        var app = assembler({
+            marker: 'foo'
+        });
+
+        function MyComponent () {
+            this.id = 'foo';
+        }
+
+        app.register(MyComponent);
+        app.run();
+
+        expect(app.components['MyComponent'][0].id).to.equal('foo');
 
         done();
     });
