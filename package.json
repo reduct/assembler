@@ -46,7 +46,7 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "@reduct/build-tools": "^1.4.4"
+    "@reduct/build-tools": "^1.4.5"
   },
   "reduct": {
     "sourceFolder": "Src/",
