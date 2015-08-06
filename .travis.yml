@@ -14,6 +14,5 @@ before_install:
   - npm install -g npm@latest
   - npm install -g codeclimate-test-reporter
 
-
 after_script:
-  - node Build/PublishCodeCoverage.js
+  - npm run reduct publish-coverage

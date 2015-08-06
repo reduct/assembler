@@ -17,33 +17,41 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function (factory) {
-    var version = {
-        major: 1,
-        minor: 0,
-        patch: 0
+    var opts = {
+        isTestingEnv: process && process.title && !! ~process.title.indexOf('reduct'),
+        packageVersion: {
+            major: 1,
+            minor: 0,
+            patch: 0
+        }
     };
-    var world;
+    var world = this;
 
+    // Check for globals.
     if (typeof window !== "undefined") {
         world = window;
     } else if (typeof global !== "undefined") {
         world = global;
     } else if (typeof self !== "undefined") {
         world = self;
-    } else {
-        world = this;
     }
 
+    // Initiate the global reduct object if necessary.
+    if (!world.reduct) {
+        world.reduct = {};
+    }
+
+    // Export the factory with the global and options to all module formats.
     if (typeof exports === "object" && typeof module !== "undefined") {
-        module.exports = factory(world, version);
+        module.exports = factory(world, opts);
     } else if (typeof define === "function" && define.amd) {
         define([], function () {
-            return factory(world, version);
+            return factory(world, opts);
         });
     } else {
-        world.reduct.assembler = factory(world, version);
+        world.reduct.reductAssembler = factory(world, opts);
     }
-})(function factory(global, version) {
+})(function factory(global, factoryOpts) {
 
     /**
      * The Assembler.
@@ -82,13 +90,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
          */
 
         function Assembler() {
+            var opts = arguments.length <= 0 || arguments[0] === undefined ? { marker: 'component' } : arguments[0];
+
             _classCallCheck(this, Assembler);
 
-            this.marker = 'component';
+            this.marker = opts.marker;
             this.selector = "data-" + this.marker;
 
             this.index = {};
+
+            //
+            // The actual instantiated components.
+            //
+            // Structure:
+            //
+            //     {
+            //         'ComponentClassName': [object, object],
+            //         'YetAnotherComponentClassName': [object]
+            //     }
+            //
             this.components = {};
+
+            //
+            // A cache of DOM elements.
+            //
+            // This is for checking if a component has already been instantiated.
+            //
+            // TODO: Refactoring: Find another way (with good performance) to combine this
+            // array with the `components` object.
+            //
+            this.elements = [];
         }
 
         //
@@ -99,25 +130,45 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         /**
          * @private
          *
-         * Instantiates a component by a given DOM node.
+         * Checks if a component has already been instantiated.
          *
-         * Will extract the component's name out of the DOM nodes `data`
-         * attribute, instantiates the actual component object and pushes
-         * the instance to the internal `components` index.
+         * @param {DOMElement} element The element which should be connected to a component.
          *
-         * @param {HTMLElement} element The component's root DOM node.
+         * @returns {boolean}
          *
          */
 
         _createClass(Assembler, [{
+            key: "isInstantiated",
+            value: function isInstantiated(element) {
+                return !! ~this.elements.indexOf(element);
+            }
+
+            /**
+             * @private
+             *
+             * Instantiates a component by a given DOM node.
+             *
+             * Will extract the component's name out of the DOM nodes `data`
+             * attribute, instantiates the actual component object and pushes
+             * the instance to the internal `components` index.
+             *
+             * @param {HTMLElement} element The component's root DOM node.
+             *
+             */
+        }, {
             key: "instantiate",
             value: function instantiate(element) {
-                var name = element.getAttribute(this.selector);
+                if (!this.isInstantiated(element)) {
+                    var _name = element.getAttribute(this.selector);
 
-                var components = this.components[name] = [].slice.call(this.components[name] || []);
-                var Component = this.index[name];
+                    var components = this.components[_name] = [].slice.call(this.components[_name] || []);
+                    var Component = this.index[_name];
 
-                components.unshift(new Component(element));
+                    this.elements.unshift(element);
+
+                    components.unshift(new Component(element));
+                }
             }
 
             /**
@@ -202,8 +253,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         return Assembler;
     })();
 
-    var assembler = function assembler() {
-        var assembler = new Assembler();
+    var assembler = function assembler(opts) {
+        var assembler = new Assembler(opts);
 
         //
         // Shard the actual front-facing API (for not leaking private methods and properties).
@@ -223,7 +274,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         //
         // Expose additional attributes for the tests.
         //
-        if (process && process.title && !! ~process.title.indexOf('reduct')) {
+        if (factoryOpts.isTestingEnv) {
             api.index = assembler.index;
             api.components = assembler.components;
         }
@@ -234,7 +285,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     //
     // Add the version information to the factory function.
     //
-    assembler.version = version;
+    assembler.version = factoryOpts.packageVersion;
 
     return assembler;
 });
