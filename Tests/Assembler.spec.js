@@ -86,7 +86,7 @@ describe('The "Assembler"', function suite () {
         app.register(MyComponent);
         app.run();
 
-        components = app.components[MyComponent.name];
+        components = app.components['MyComponent'];
 
         expect(Object.keys(app.components).length).to.equal(1);
 
