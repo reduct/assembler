@@ -1,3 +1,2 @@
 node_modules
-Tests/Coverages/
-lcov.info
+coverage.lcov
