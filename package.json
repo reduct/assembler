@@ -46,13 +46,12 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "@reduct/build-tools": "^1.4.3"
+    "@reduct/build-tools": "^1.4.4"
   },
   "reduct": {
     "sourceFolder": "Src/",
     "distributionFolder": "Dist/",
     "entryFile": "Assembler.js",
-    "globalPackageName": "reductAssembler",
-    "coverageReportFile": "lcov.info"
+    "globalPackageName": "reductAssembler"
   }
 }
