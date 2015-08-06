@@ -39,7 +39,42 @@ function factory (global, version) {
             this.selector = `data-${this.marker}`;
 
             this.index = {};
+
+            //
+            // The actual instantiated components.
+            //
+            // Structure:
+            //
+            //     {
+            //         'ComponentClassName': [object, object],
+            //         'YetAnotherComponentClassName': [object]
+            //     }
+            //
             this.components = {};
+
+            //
+            // A cache of DOM elements.
+            //
+            // This is for checking if a component has already been instantiated.
+            //
+            // TODO: Refactoring: Find another way (with good performance) to combine this
+            // array with the `components` object.
+            //
+            this.elements = [];
+        }
+
+        /**
+         * @private
+         *
+         * Checks if a component has already been instantiated.
+         *
+         * @param {DOMElement} element The element which should be connected to a component.
+         *
+         * @returns {boolean}
+         *
+         */
+        isInstantiated (element) {
+            return !!~this.elements.indexOf(element);
         }
 
         /**
@@ -55,12 +90,16 @@ function factory (global, version) {
          *
          */
         instantiate (element) {
-            let name = element.getAttribute(this.selector);
+            if (!this.isInstantiated(element)) {
+                let name = element.getAttribute(this.selector);
 
-            let components = this.components[name] = [].slice.call(this.components[name] || []);
-            let Component = this.index[name];
+                let components = this.components[name] = [].slice.call(this.components[name] || []);
+                let Component = this.index[name];
 
-            components.unshift(new Component(element));
+                this.elements.unshift(element);
+
+                components.unshift(new Component(element));
+            }
         }
 
         /**

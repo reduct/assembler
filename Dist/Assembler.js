@@ -88,7 +88,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.selector = "data-" + this.marker;
 
             this.index = {};
+
+            //
+            // The actual instantiated components.
+            //
+            // Structure:
+            //
+            //     {
+            //         'ComponentClassName': [object, object],
+            //         'YetAnotherComponentClassName': [object]
+            //     }
+            //
             this.components = {};
+
+            //
+            // A cache of DOM elements.
+            //
+            // This is for checking if a component has already been instantiated.
+            //
+            // TODO: Refactoring: Find another way (with good performance) to combine this
+            // array with the `components` object.
+            //
+            this.elements = [];
         }
 
         //
@@ -99,25 +120,45 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         /**
          * @private
          *
-         * Instantiates a component by a given DOM node.
+         * Checks if a component has already been instantiated.
          *
-         * Will extract the component's name out of the DOM nodes `data`
-         * attribute, instantiates the actual component object and pushes
-         * the instance to the internal `components` index.
+         * @param {DOMElement} element The element which should be connected to a component.
          *
-         * @param {HTMLElement} element The component's root DOM node.
+         * @returns {boolean}
          *
          */
 
         _createClass(Assembler, [{
+            key: "isInstantiated",
+            value: function isInstantiated(element) {
+                return !! ~this.elements.indexOf(element);
+            }
+
+            /**
+             * @private
+             *
+             * Instantiates a component by a given DOM node.
+             *
+             * Will extract the component's name out of the DOM nodes `data`
+             * attribute, instantiates the actual component object and pushes
+             * the instance to the internal `components` index.
+             *
+             * @param {HTMLElement} element The component's root DOM node.
+             *
+             */
+        }, {
             key: "instantiate",
             value: function instantiate(element) {
-                var name = element.getAttribute(this.selector);
+                if (!this.isInstantiated(element)) {
+                    var _name = element.getAttribute(this.selector);
 
-                var components = this.components[name] = [].slice.call(this.components[name] || []);
-                var Component = this.index[name];
+                    var components = this.components[_name] = [].slice.call(this.components[_name] || []);
+                    var Component = this.index[_name];
 
-                components.unshift(new Component(element));
+                    this.elements.unshift(element);
+
+                    components.unshift(new Component(element));
+                }
             }
 
             /**
