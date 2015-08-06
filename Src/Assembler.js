@@ -1,4 +1,4 @@
-function factory (global, version) {
+function factory (global, opts) {
 
     /**
      * The Assembler.
@@ -186,7 +186,7 @@ function factory (global, version) {
         //
         // Expose additional attributes for the tests.
         //
-        if (process && process.title && !!~process.title.indexOf('reduct')) {
+        if (opts.isTestingEnv) {
             api.index = assembler.index;
             api.components = assembler.components;
         }
@@ -197,7 +197,7 @@ function factory (global, version) {
     //
     // Add the version information to the factory function.
     //
-    assembler.version = version;
+    assembler.version = opts.packageVersion;
 
     return assembler;
 }

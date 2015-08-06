@@ -17,33 +17,41 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function (factory) {
-    var version = {
-        major: 1,
-        minor: 0,
-        patch: 0
+    var opts = {
+        isTestingEnv: process && process.title && !! ~process.title.indexOf('reduct'),
+        packageVersion: {
+            major: 1,
+            minor: 0,
+            patch: 0
+        }
     };
-    var world;
+    var world = this;
 
+    // Check for globals.
     if (typeof window !== "undefined") {
         world = window;
     } else if (typeof global !== "undefined") {
         world = global;
     } else if (typeof self !== "undefined") {
         world = self;
-    } else {
-        world = this;
     }
 
+    // Initiate the global reduct object if necessary.
+    if (!world.reduct) {
+        world.reduct = {};
+    }
+
+    // Export the factory with the global and options to all module formats.
     if (typeof exports === "object" && typeof module !== "undefined") {
-        module.exports = factory(world, version);
+        module.exports = factory(world, opts);
     } else if (typeof define === "function" && define.amd) {
         define([], function () {
-            return factory(world, version);
+            return factory(world, opts);
         });
     } else {
-        world.reductAssembler = factory(world, version);
+        world.reduct.reductAssembler = factory(world, opts);
     }
-})(function factory(global, version) {
+})(function factory(global, opts) {
 
     /**
      * The Assembler.
@@ -264,7 +272,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         //
         // Expose additional attributes for the tests.
         //
-        if (process && process.title && !! ~process.title.indexOf('reduct')) {
+        if (opts.isTestingEnv) {
             api.index = assembler.index;
             api.components = assembler.components;
         }
@@ -275,7 +283,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     //
     // Add the version information to the factory function.
     //
-    assembler.version = version;
+    assembler.version = opts.packageVersion;
 
     return assembler;
 });
