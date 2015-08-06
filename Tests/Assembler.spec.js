@@ -94,4 +94,24 @@ describe('The "Assembler"', function suite () {
 
         done();
     });
+
+    it('should be able call `run` multiple times without polluting the `components` data structure', function test (done) {
+        var app = assembler();
+
+        function MyComponent () {
+            this.id = 'foo';
+        }
+
+        app.register(MyComponent);
+        app.run();
+
+        expect(app.components['MyComponent'].length).to.equal(1);
+
+        app.run();
+
+        // Should still be only one component
+        expect(app.components['MyComponent'].length).to.equal(1);
+
+        done();
+    });
 });
