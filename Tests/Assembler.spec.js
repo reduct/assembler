@@ -95,7 +95,7 @@ describe('The "Assembler"', function suite () {
         done();
     });
 
-    it('should be able call `run` multiple times without polluting the `components` data structure', function test (done) {
+    it('should provide a possibility to call `run` multiple times without polluting the `components` data structure', function test (done) {
         var app = assembler();
 
         function MyComponent () {
