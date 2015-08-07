@@ -1,7 +1,7 @@
 /**
  *
  * @name @reduct/assembler
- * @version 1.0.0
+ * @version 1.0.1
  * @license MIT
  *
  * @author Tyll Weiß <inkdpixels@gmail.com>
@@ -22,7 +22,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         packageVersion: {
             major: 1,
             minor: 0,
-            patch: 0
+            patch: 1
         }
     };
     var world = this;
@@ -49,7 +49,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             return factory(world, opts);
         });
     } else {
-        world.reduct.reductAssembler = factory(world, opts);
+        world.reduct.assembler = factory(world, opts);
     }
 })(function factory(global, factoryOpts) {
 
