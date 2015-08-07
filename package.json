@@ -1,6 +1,6 @@
 {
   "name": "@reduct/assembler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Parses a DOM Node for tags and executes the matching constructor on each element.",
   "main": "Dist/Assembler.js",
   "scripts": {
@@ -46,13 +46,12 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "@reduct/build-tools": "^1.4.2"
+    "@reduct/build-tools": "^1.4.5"
   },
   "reduct": {
     "sourceFolder": "Src/",
     "distributionFolder": "Dist/",
     "entryFile": "Assembler.js",
-    "globalPackageName": "reductAssembler",
-    "coverageReportFile": "lcov.info"
+    "globalPackageName": "assembler"
   }
 }
