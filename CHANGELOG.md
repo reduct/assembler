@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+**Fixed issues:**
+- Exported the assembler under the correct global name.
+
 ## 1.0.1
 **Implemented enhancements:**
 - The dataset tag on which the assembler parses on is now configurable.
