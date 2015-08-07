@@ -3,6 +3,7 @@
 
 > Parses a DOM Node for tags and executes the matching constructor on each element. This module embraces the practice of a 'Single Point of Entry'-Application(SPE).
 
+
 ## Why?
 Using a single point of entry reduces code and promotes maintainability. Instead of writing the following accross all of your sites/apps components:
 ```js
@@ -15,6 +16,7 @@ $('.myAwesomeApp').each(function(index, node) {
 ... you will just create an assembler, which does all the initializing logic for you. It also reduces the number of operations in the DOM, which is great for performance since DOM operations are generally slow. Last but not least, your apps/components are free of selectors, you don't need to adjust your component if another project forbids the use of classes or a certain `data-*` attribute as a JS selector.
 
 TL;DR: Use an assembler, to reduce duplicate code, enhance performance and reduce the dependence of selectors in your JS.
+
 
 ## Install
 With npm, use the familiar syntax e.g.:
@@ -53,6 +55,7 @@ In your HTML:
 <div data-component="MyComponent"></div>
 <div data-component="YetAnotherComponent"></div>
 ```
+
 
 ## API
 
@@ -115,8 +118,10 @@ import AnotherComponent from 'another-component';
 app.registerAll({MyComponent, AnotherComponent});
 ```
 
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
+
 
 ## License
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
