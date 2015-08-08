@@ -29,7 +29,7 @@ once the Assembler package is installed, just require it in the main application
 var assembler = require('@reduct/assembler');
 ```
 
-This package also supports AMD/RequireJS, it is defined as `reduct.assembler`. Aren't using AMD/CommonJS? Just grab a [release](https://github.com/reduct/assembler/releases), include the `Dist/Assembler.min.js` and access the loader via the following global:
+This package also supports AMD/RequireJS. Aren't using AMD or CommonJS? Just grab a [release](https://github.com/reduct/assembler/releases), include the `Dist/Assembler.min.js` and access the assembler via the following global:
 ```js
 var assembler = window.reduct.assembler;
 ```
