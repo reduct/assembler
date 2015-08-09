@@ -132,15 +132,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         /**
          * @private
          *
-         * Checks if a component has already been instantiated.
+         * Parses the function name out of `Function.prototype.toString()`.
          *
-         * @param {DOMElement} element The element which should be connected to a component.
+         * TODO: Move into Utilities when supported by `build-tools`.
          *
-         * @returns {boolean}
+         * @param {Function} The function from which the name should be extracted.
+         * @returns {string} The actual name (`anonymous` when the function does not provide a name).
          *
          */
 
         _createClass(Assembler, [{
+            key: "getFunctionName",
+            value: function getFunctionName(fn) {
+                if (Object.prototype.toString.call(fn) !== '[object Function]') {
+                    throw new Error(fn + " is not a valid function.");
+                }
+
+                var regexe = /^\s*function\s*([^\(]*)/im;
+
+                return fn.name || regexe.exec(fn.toString())[1] || 'anonymous';
+            }
+
+            /**
+             * @private
+             *
+             * Checks if a component has already been instantiated.
+             *
+             * @param {DOMElement} element The element which should be connected to a component.
+             *
+             * @returns {boolean}
+             *
+             */
+        }, {
             key: "isInstantiated",
             value: function isInstantiated(element) {
                 return !! ~this.elements.indexOf(element);
@@ -195,7 +218,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     throw new Error("'" + type + "' is not a valid component class.");
                 }
 
-                name = name || ComponentClass.name;
+                name = name || this.getFunctionName(ComponentClass);
 
                 this.index[name] = ComponentClass;
 

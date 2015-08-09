@@ -65,6 +65,27 @@ function factory (global, factoryOpts) {
             this.elements = [];
         }
 
+       /**
+        * @private
+        *
+        * Parses the function name out of `Function.prototype.toString()`.
+        *
+        * TODO: Move into Utilities when supported by `build-tools`.
+        *
+        * @param {Function} The function from which the name should be extracted.
+        * @returns {string} The actual name (`anonymous` when the function does not provide a name).
+        *
+        */
+        getFunctionName (fn) {
+            if (Object.prototype.toString.call(fn) !== '[object Function]') {
+                throw new Error(`${fn} is not a valid function.`);
+            }
+
+            let regexe = /^\s*function\s*([^\(]*)/im;
+
+            return fn.name || regexe.exec(fn.toString())[1] || 'anonymous';
+        }
+
         /**
          * @private
          *
@@ -124,7 +145,7 @@ function factory (global, factoryOpts) {
                 throw new Error(`'${type}' is not a valid component class.`);
             }
 
-            name = name || ComponentClass.name;
+            name = name || this.getFunctionName(ComponentClass);
 
             this.index[name] = ComponentClass;
 

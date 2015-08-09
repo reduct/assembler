@@ -1,4 +1,4 @@
-/* @reduct/assembler x.x.x | @license MIT */
+/* @reduct/assembler | @license MIT */
 
 var buildTools = require('@reduct/build-tools');
 var assembler = require('./../Dist/Assembler.js');
