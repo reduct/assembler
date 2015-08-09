@@ -132,4 +132,17 @@ describe('The "Assembler"', function suite () {
 
         done();
     });
+
+    it('should provide a chainable API', function test (done) {
+        var app = assembler();
+
+        function MyComponent () {
+            this.id = 'foo';
+        }
+
+        expect(app.register(MyComponent).constructor.name).to.equal('Assembler');
+        expect(app.registerAll({MyComponent: MyComponent}).constructor.name).to.equal('Assembler');
+    
+        done();
+    });
 });

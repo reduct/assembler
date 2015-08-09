@@ -1,7 +1,7 @@
 /**
  *
  * @name @reduct/assembler
- * @version 1.0.1
+ * @version 1.1.0
  * @license MIT
  *
  * @author Tyll Weiß <inkdpixels@gmail.com>
@@ -21,8 +21,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         isTestingEnv: process && process.title && !! ~process.title.indexOf('reduct'),
         packageVersion: {
             major: 1,
-            minor: 0,
-            patch: 1
+            minor: 1,
+            patch: 0
         }
     };
     var world = this;
@@ -86,6 +86,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         /**
          * Initializes the empty component class index
          * and the actual component instance cache.
+         *
+         * @param {object} opts Overwritten default options
          *
          */
 
@@ -196,6 +198,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 name = name || ComponentClass.name;
 
                 this.index[name] = ComponentClass;
+
+                return this;
             }
 
             /**
@@ -223,6 +227,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 Object.keys(classMap).forEach(function (name) {
                     return _this.register(classMap[name], name);
                 });
+
+                return this;
             }
 
             /**

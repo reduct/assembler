@@ -33,6 +33,8 @@ function factory (global, factoryOpts) {
          * Initializes the empty component class index
          * and the actual component instance cache.
          *
+         * @param {object} opts Overwritten default options
+         *
          */
         constructor (opts = { marker: 'component' }) {
             this.marker = opts.marker;
@@ -125,6 +127,8 @@ function factory (global, factoryOpts) {
             name = name || ComponentClass.name;
 
             this.index[name] = ComponentClass;
+
+            return this;
         }
 
         /**
@@ -146,6 +150,8 @@ function factory (global, factoryOpts) {
          */
         registerAll (classMap) {
             Object.keys(classMap).forEach((name) => this.register(classMap[name], name));
+
+            return this;
         }
 
         /**
