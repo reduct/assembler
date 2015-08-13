@@ -36,6 +36,7 @@ var assembler = window.reduct.assembler;
 In the main application file, create a new instance of the Constructor e.g.:
 
 ```js
+import assembler from '@reduct/assembler';
 import MyComponent from 'MyComponent';
 import YetAnotherComponent from 'YetAnotherComponent';
 
