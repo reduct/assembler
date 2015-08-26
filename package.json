@@ -53,6 +53,6 @@
     "sourceFolder": "Src/",
     "distributionFolder": "Dist/",
     "entryFile": "Assembler.js",
-    "globalPackageName": "reductAssembler"
+    "globalPackageName": "reduct.assembler"
   }
 }

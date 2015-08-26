@@ -31,7 +31,7 @@ var assembler = require('@reduct/assembler');
 
 This package also supports AMD/RequireJS. Aren't using AMD or CommonJS? Just grab a [release](https://github.com/reduct/assembler/releases), include the `Dist/Assembler.min.js` and access the assembler via the following global:
 ```js
-var assembler = window.reductAssembler;
+var assembler = window.reduct.assembler;
 ```
 
 ### Configuration
