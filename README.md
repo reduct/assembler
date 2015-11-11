@@ -3,6 +3,7 @@
 
 > Parses a DOM Node for tags and executes the matching constructor on each element. This module embraces the practice of a 'Single Point of Entry'-Application(SPE).
 
+
 ## Why?
 Using a single point of entry reduces code and promotes maintainability. Instead of writing the following accross all of your sites/apps components:
 ```js
@@ -16,6 +17,7 @@ $('.myAwesomeApp').each(function(index, node) {
 
 TL;DR: Use an assembler, to reduce duplicate code, enhance performance and reduce the dependence of selectors in your JS.
 
+
 ## Install
 With npm, use the familiar syntax e.g.:
 ```shell
@@ -27,7 +29,7 @@ once the Assembler package is installed, just require it in the main application
 var assembler = require('@reduct/assembler');
 ```
 
-This package also supports AMD/RequireJS, it is defined as `reduct.assembler`. Aren't using AMD/CommonJS? Just grab a [release](https://github.com/reduct/assembler/releases), include the `Dist/Assembler.min.js` and access the loader via the following global:
+This package also supports AMD/RequireJS. Aren't using AMD or CommonJS? Just grab a [release](https://github.com/reduct/assembler/releases), include the `Dist/Assembler.min.js` and access the assembler via the following global:
 ```js
 var assembler = window.reduct.assembler;
 ```
@@ -54,6 +56,7 @@ In your HTML:
 <div data-component="MyComponent"></div>
 <div data-component="YetAnotherComponent"></div>
 ```
+
 
 ## API
 
@@ -116,8 +119,10 @@ import AnotherComponent from 'another-component';
 app.registerAll({MyComponent, AnotherComponent});
 ```
 
+
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style.
+
 
 ## License
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR

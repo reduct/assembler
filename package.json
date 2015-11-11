@@ -1,11 +1,14 @@
 {
   "name": "@reduct/assembler",
-  "version": "1.0.2",
   "description": "Parses a DOM Node for tags and executes the matching constructor on each element.",
-  "main": "Dist/Assembler.js",
+  "main": "dist/assembler.js",
   "scripts": {
-    "test": "reduct",
-    "reduct": "reduct"
+    "postinstall": "npm run build",
+    "build": "babel src --out-dir dist",
+    "lint": "xo src/**/*.js",
+    "mocha": "export TEST=true && find ./src -name '*.spec.js' | xargs istanbul cover -x *.spec.js _mocha -- -R spec --compilers js:babel/register",
+    "test": "npm run lint && npm run mocha && npm run build",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
@@ -46,12 +49,27 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "@reduct/build-tools": "^1.4.5"
+    "@inkdpixels/commit-analyzer": "0.0.2",
+    "@inkdpixels/release-notes-generator": "0.0.2",
+    "@reduct/logger": "^1.0.2",
+    "chai": "^3.4.1",
+    "istanbul": "^0.4.0",
+    "jsdom": "^7.0.2",
+    "mocha": "^2.3.3",
+    "semantic-release": "^4.3.5",
+    "xo": "^0.10.1"
   },
-  "reduct": {
-    "sourceFolder": "Src/",
-    "distributionFolder": "Dist/",
-    "entryFile": "Assembler.js",
-    "globalPackageName": "assembler"
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "mocha",
+      "browser",
+      "es6"
+    ]
+  },
+  "release": {
+    "analyzeCommits": "@inkdpixels/commit-analyzer",
+    "generateNotes": "@inkdpixels/release-notes-generator"
   }
 }
