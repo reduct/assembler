@@ -1,11 +1,11 @@
 {
   "name": "@reduct/assembler",
-  "version": "1.1.0",
   "description": "Parses a DOM Node for tags and executes the matching constructor on each element.",
   "main": "Dist/Assembler.js",
   "scripts": {
     "test": "reduct",
-    "reduct": "reduct"
+    "reduct": "reduct",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
@@ -46,13 +46,20 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
+    "@inkdpixels/commit-analyzer": "0.0.2",
+    "@inkdpixels/release-notes-generator": "0.0.2",
     "@reduct/build-tools": "^1.5.2",
-    "@reduct/logger": "^1.0.2"
+    "@reduct/logger": "^1.0.2",
+    "semantic-release": "^4.3.5"
   },
   "reduct": {
     "sourceFolder": "Src/",
     "distributionFolder": "Dist/",
     "entryFile": "Assembler.js",
     "globalPackageName": "reduct.assembler"
+  },
+  "release": {
+    "analyzeCommits": "@inkdpixels/commit-analyzer",
+    "generateNotes": "@inkdpixels/release-notes-generator"
   }
 }
