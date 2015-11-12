@@ -124,6 +124,7 @@ app.registerAll({MyComponent, AnotherComponent});
 In lieu of a formal styleguide, take care to maintain the existing coding style.
 Regarding the commit messages, please use a prefix listed at [Inkdpixels/commit-analyzer](https://github.com/Inkdpixels/commit-analyzer#commit-message-guidelines) so semantic-release can do it's ob properly.
 
+
 ## License
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
