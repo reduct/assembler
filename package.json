@@ -56,7 +56,7 @@
     "jsdom": "^7.0.2",
     "mocha": "^2.3.3",
     "semantic-release": "^4.3.5",
-    "xo": "^0.10.1"
+    "xo": "^0.11.0"
   },
   "xo": {
     "esnext": true,
