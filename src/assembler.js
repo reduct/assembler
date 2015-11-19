@@ -185,7 +185,7 @@ class Assembler {
 	 */
 	run() {
 		const nodeList = document.querySelectorAll(`[${this.selector}]`);
-		const elements = Reflect.apply(Array.prototype.slice, nodeList, nodeList);
+		const elements = Reflect.apply(Array.prototype.slice, nodeList, [nodeList]);
 		const names = Object.keys(this.index);
 
 		//
