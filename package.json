@@ -3,10 +3,10 @@
   "description": "Parses a DOM Node for tags and executes the matching constructor on each element.",
   "main": "dist/assembler.js",
   "scripts": {
-    "postinstall": "npm run build",
+    "prepublish": "npm run build",
     "build": "browserify src/assembler.js -o dist/assembler.js --standalone reduct.assembler -t [ babelify --presets [ es2015 ] ]",
     "lint": "xo src/**/*.js",
-    "mocha": "export TEST=true && find ./src -name '*.spec.js' | xargs istanbul cover -x *.spec.js _mocha -- -R spec --compilers js:babel/register",
+    "mocha": "export TEST=true && find ./src -name '*.spec.js' | xargs istanbul cover -x *.spec.js _mocha -- -R spec --compilers js:babel-register",
     "test": "npm run lint && npm run mocha && npm run build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -49,15 +49,18 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "@inkdpixels/commit-analyzer": "0.0.2",
-    "@inkdpixels/release-notes-generator": "0.0.2",
-    "babel": "^5.8.34",
+    "@reduct/logger": "^1.1.0",
+    "babel-polyfill": "^6.3.14",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-register": "^6.3.13",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
     "chai": "^3.4.1",
-    "istanbul": "^0.4.0",
-    "jsdom": "^7.0.2",
-    "mocha": "^2.3.3",
+    "istanbul": "^0.4.1",
+    "jsdom": "^7.2.2",
+    "mocha": "^2.3.4",
     "semantic-release": "^4.3.5",
-    "xo": "^0.11.0"
+    "xo": "^0.12.1"
   },
   "xo": {
     "esnext": true,
@@ -71,11 +74,5 @@
   "release": {
     "analyzeCommits": "@inkdpixels/commit-analyzer",
     "generateNotes": "@inkdpixels/release-notes-generator"
-  },
-  "dependencies": {
-    "@reduct/logger": "^1.0.2",
-    "babel-preset-es2015": "^6.1.18",
-    "babelify": "^7.2.0",
-    "browserify": "^12.0.1"
   }
 }

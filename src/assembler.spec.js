@@ -1,4 +1,4 @@
-import assembler from './assembler.js';
+import assembler from './assembler.mocha-polyfill.js';
 import chai from 'chai';
 import {DOM} from './utils/';
 
@@ -15,9 +15,7 @@ describe('The "Assembler"', () => {
 	  </body>
   </html>`;
 
-	beforeEach(done => {
-		return DOM.create(mock, done);
-	});
+	beforeEach(done => DOM.create(mock, done));
 
 	it('should be able to create an app', done => {
 		const app = assembler();
