@@ -49,8 +49,8 @@
   },
   "homepage": "https://github.com/reduct/assembler",
   "devDependencies": {
-    "@inkdpixels/commit-analyzer": "^0.0.4",
-    "@inkdpixels/release-notes-generator": "^0.0.4",
+    "@inkdpixels/commit-analyzer": "^1.0.0",
+    "@inkdpixels/release-notes-generator": "^1.0.0",
     "@reduct/logger": "^1.1.0",
     "babel-polyfill": "^6.3.14",
     "babel-preset-es2015": "^6.3.13",
